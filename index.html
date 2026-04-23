@@ -254,15 +254,26 @@
       text-align: center;
       font-weight: 800;
       font-size: 18px;
-      background: #eef4ff
+      background: #eef4ff;
+      transition: all 0.3s ease;
     }
 
     .good {
-      background: #e6fff4
+      background: #e6fff4;
+      border: 1px solid var(--ok);
+    }
+
+    @keyframes pulse-bad {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 0, 0, 0.15); }
+      100% { transform: scale(1); }
     }
 
     .bad {
-      background: #ffe6e6
+      background: #ffe6e6;
+      border: 1px solid #ffb3b3;
+      color: #d32f2f;
+      animation: pulse-bad 0.6s ease-in-out infinite;
     }
 
     .btn {
