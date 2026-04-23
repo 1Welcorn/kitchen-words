@@ -377,8 +377,7 @@
   <div class="layout">
     <aside class="sidebar">
       <h1>Inglês na minha cozinha 🎮</h1>
-      <p>Organize apenas <strong>objeto → ação</strong>. A terceira coluna já fica alinhada com as ações para dar
-        suporte visual.</p>
+      <p>Temos 5 objetos para organizar. Vamos começar com os três primeiros!</p>
       <div class="side-note">Clique nos objetos e nas ações para ouvir o áudio em inglês. Arraste apenas as palavras das
         duas primeiras colunas.</div>
       <button class="btn" id="resetBtnTop" type="button">Iniciar / Reiniciar</button>
@@ -431,6 +430,7 @@
       resetBtnTop: document.getElementById('resetBtnTop'),
     };
 
+    let gameData = [...data];
     let dragged = null;
     let selectedObject = null;
     let selectedAction = null;
@@ -684,14 +684,17 @@
       actions.appendChild(actionZone);
       translations.appendChild(translationZone);
 
-      const availableObjects = shuffle(data.filter(item => !matchedIds.has(item.id)));
-      const availableActions = shuffle(data.filter(item => !matchedIds.has(item.id)));
+      const availableItems = gameData.filter(item => !matchedIds.has(item.id));
+      const visibleItems = availableItems.slice(0, 3);
+      
+      const objectsToRender = shuffle(visibleItems);
+      const actionsToRender = shuffle(visibleItems);
 
-      availableObjects.forEach(item => {
+      objectsToRender.forEach(item => {
         objects.appendChild(makeCard(item.obj, 'object', item.id));
       });
 
-      availableActions.forEach(item => {
+      actionsToRender.forEach(item => {
         actions.appendChild(makeCard(item.act, 'action', item.id));
 
         const translationCard = makeCard(item.tr, 'translation', item.id);
@@ -711,6 +714,7 @@
       selectedAction = null;
       score = 0;
       matchedIds = new Set();
+      gameData = shuffle(data);
       dom.matchedHistory.innerHTML = '';
       updateBar();
       setStatus('Comece arrastando', null);
