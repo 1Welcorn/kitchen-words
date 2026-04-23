@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kitchen Match Ultra - English Edition</title>
+    <title>Teste Final - Kitchen Match</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -264,31 +264,31 @@
     <div class="quiz-card">
         <div id="game-view">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <div class="quiz-badge" style="margin-bottom: 0;">Kitchen Match Ultra</div>
-                <a href="index.html" style="background: #eef2ff; color: var(--primary-dark); padding: 0.35rem 0.75rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.78rem; border: 1px solid #c7d2fe; text-transform: uppercase; letter-spacing: 0.04em;">MODO ARRASTAR 🖱️</a>
+                <div class="quiz-badge" style="margin-bottom: 0;">Teste Final 🏆</div>
+                <a href="index.html" style="background: #eef2ff; color: var(--primary-dark); padding: 0.35rem 0.75rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.78rem; border: 1px solid #c7d2fe; text-transform: uppercase; letter-spacing: 0.04em;">FASE 1 🖱️</a>
             </div>
             <div class="progress-container">
                 <div class="progress-bar" id="progress"></div>
             </div>
 
             <div class="header">
-                <h2>What do we do?</h2>
-                <p>Listen and choose the right action</p>
+                <h2>O que fazemos?</h2>
+                <p>Ouça e escolha a ação correta</p>
             </div>
 
             <div class="image-wrapper" onclick="speakCurrent()">
                 <img id="display-image" src="" alt="Object">
-                <button class="audio-btn">≡ƒöè Listen</button>
+                <button class="audio-btn">🔊 Ouvir</button>
             </div>
 
             <div class="options-grid" id="options"></div>
         </div>
 
         <div id="result-view" class="hidden">
-            <div style="font-size: 4rem;">Γ£¿</div>
-            <h2 style="font-weight: 800; font-size: 2rem;">Well Done!</h2>
+            <div style="font-size: 4rem;">✨</div>
+            <h2 style="font-weight: 800; font-size: 2rem;">Teste Final Completo!</h2>
             <p id="score-text" style="color: var(--text-light); font-size: 1.2rem;"></p>
-            <button class="btn-restart" onclick="restart()">Try Again</button>
+            <button class="btn-restart" onclick="restart()">Refazer Teste</button>
         </div>
     </div>
 </div>
@@ -369,7 +369,7 @@
 
         if(choice === correct) {
             btn.classList.add('correct');
-            speak("Yes! We " + choice);
+            speak("Isso mesmo! " + choice);
             score++;
             setTimeout(() => {
                 current++;
@@ -378,7 +378,7 @@
             }, 2200);
         } else {
             btn.classList.add('wrong');
-            speak("Not this one. Try again.");
+            speak("Ainda não. Tente de novo.");
             setTimeout(() => {
                 btn.classList.remove('wrong');
                 btns.forEach(b => b.disabled = false);
@@ -389,8 +389,8 @@
     function finish() {
         document.getElementById('game-view').classList.add('hidden');
         document.getElementById('result-view').classList.remove('hidden');
-        document.getElementById('score-text').innerText = `You got ${score} out of ${questions.length} correct!`;
-        speak("Congratulations! You did a great job.");
+        document.getElementById('score-text').innerText = `Você acertou ${score} de ${questions.length}!`;
+        speak("Parabéns! Você fez um ótimo trabalho.");
     }
 
     function restart() {

@@ -382,7 +382,6 @@
       <div class="side-note">Clique nos objetos e nas ações para ouvir o áudio em inglês. Arraste apenas as palavras das
         duas primeiras colunas.</div>
       <button class="btn" id="resetBtnTop" type="button">Iniciar / Reiniciar</button>
-      <a href="quiz.html" class="btn" style="background: linear-gradient(135deg, #e255aa, #ff7eb3); text-decoration: none; text-align: center; margin-top: 10px;">Modo Quiz 📱</a>
     </aside>
     <div class="app">
 
@@ -451,7 +450,7 @@
     }
 
     function setStatus(text, ok = null) {
-      dom.status.textContent = text;
+      dom.status.innerHTML = text;
       dom.status.className = 'status' + (ok === null ? '' : ok ? ' good' : ' bad');
     }
 
@@ -534,7 +533,7 @@
         if (!dragged) return;
 
         if (dragged.type !== expectedType) {
-          setStatus('❌ Drop the correct type here.', false);
+          setStatus('❌ Arraste o tipo correto para aqui.', false);
           dragged = null;
           return;
         }
@@ -551,7 +550,7 @@
 
       if (!history.querySelector('h4')) {
         const title = document.createElement('h4');
-        title.textContent = 'Completed pairs';
+        title.textContent = 'Pares Completados';
         history.appendChild(title);
       }
 
@@ -596,17 +595,25 @@
         matchedIds.add(item.id);
         score += 1;
         updateBar();
-        setStatus(`✔ Great job! ${item.obj} → ${item.act}`, true);
+        setStatus(`✔ Muito bem! ${item.obj} → ${item.act}`, true);
         speak(item.act);
         selectedObject = null;
         selectedAction = null;
         startPendingMatch(item);
 
         if (score === data.length) {
-          setTimeout(() => setStatus('🎉 NÍVEL COMPLETO!', true), 1200);
+          setTimeout(() => {
+            setStatus(`
+              <div style="padding: 10px;">
+                <div style="font-size: 24px; margin-bottom: 10px;">🎉 PARABÉNS! VOCÊ COMPLETOU A FASE 1!</div>
+                <p>Agora você está pronto para o desafio final?</p>
+                <a href="quiz.html" class="btn" style="display: block; text-decoration: none; background: linear-gradient(135deg, #e255aa, #ff7eb3);">Ir para o Teste Final 🚀</a>
+              </div>
+            `, true);
+          }, 1200);
         }
       } else {
-        setStatus('❌ Incorrect pair. Try a different action.', false);
+        setStatus('❌ Par incorreto. Tente uma ação diferente.', false);
         selectedAction = null;
         render();
       }
@@ -619,7 +626,7 @@
       actions.innerHTML = '';
       translations.innerHTML = '';
 
-      const objectZone = makeDropZone('Drop OBJECT here', 'object', (item) => {
+      const objectZone = makeDropZone('Arraste o OBJETO aqui', 'object', (item) => {
         if (pendingMatchedItem) {
           finalizePendingMatch();
         }
@@ -629,10 +636,10 @@
         objectZone.innerHTML = '';
         objectZone.appendChild(makeDisplayCard('object', item.id));
         objectZone.classList.add('filled');
-        setStatus(`Object selected: ${item.text}. Now drop the matching action.`, null);
+        setStatus(`Objeto selecionado: ${item.text}. Agora arraste a ação correspondente.`, null);
       });
 
-      const actionZone = makeDropZone('Drop ACTION here', 'action', (item) => {
+      const actionZone = makeDropZone('Arraste a AÇÃO aqui', 'action', (item) => {
         if (pendingMatchedItem) {
           finalizePendingMatch();
         }
@@ -645,7 +652,7 @@
         translationZone.innerHTML = '';
         translationZone.appendChild(makeDisplayCard('translation', item.id));
         translationZone.classList.add('filled', 'large');
-        setStatus(`Action selected: ${item.text}. Use the aligned translation column as support.`, null);
+        setStatus(`Ação selecionada: ${item.text}. Use a tradução como apoio visual.`, null);
         tryCompletePair();
       });
 
