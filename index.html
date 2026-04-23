@@ -131,20 +131,21 @@
     }
 
     .card {
-      background: #f8fbff;
-      border: 2px solid #dfe8ff;
-      border-radius: 16px;
-      padding: 18px;
+      background: linear-gradient(145deg, #ffffff, #f0f4ff);
+      border: 1px solid #d0daff;
+      border-radius: 24px;
+      padding: 20px;
       cursor: grab;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 14px;
-      transition: .2s;
+      gap: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       font-weight: 700;
       min-height: 120px;
       font-size: 24px;
-      user-select: none
+      user-select: none;
+      box-shadow: 0 4px 12px rgba(91, 124, 255, 0.05);
     }
 
     .card:hover {
@@ -162,16 +163,17 @@
     }
 
     .card .art {
-      width: 84px;
-      height: 84px;
+      width: 90px;
+      height: 90px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 14px;
-      background: linear-gradient(180deg, #ffffff, #eef4ff);
-      border: 1px solid #dbe6ff;
-      flex: 0 0 84px;
-      overflow: hidden
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid #e0e7ff;
+      flex: 0 0 90px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
     }
 
     .card .art img {
@@ -188,19 +190,19 @@
 
     .zone {
       border: 2px dashed #cfdcff;
-      border-radius: 14px;
+      border-radius: 24px;
       padding: 16px;
-      margin-bottom: 14px;
-      min-height: 120px;
-      height: 120px;
+      margin-bottom: 16px;
+      min-height: 130px;
+      height: 130px;
       text-align: center;
       font-size: 18px;
       color: var(--muted);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #fbfdff;
-      transition: .2s
+      background: rgba(245, 248, 255, 0.5);
+      transition: all 0.3s ease;
     }
 
     .zone.filled {

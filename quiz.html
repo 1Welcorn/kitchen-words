@@ -40,16 +40,15 @@
         }
 
         .quiz-card {
-            background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);
-            border-radius: 2.5rem;
-            padding: 2.5rem;
+            background: #ffffff;
+            border-radius: 3rem;
+            padding: 3rem;
             box-shadow:
-                0 20px 45px rgba(99, 102, 241, 0.18),
-                0 2px 8px rgba(15, 23, 42, 0.05);
+                0 30px 60px rgba(99, 102, 241, 0.12),
+                0 4px 12px rgba(0, 0, 0, 0.03);
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(2px);
-            animation: cardEnter 0.55s ease;
+            border: 1px solid rgba(255, 255, 255, 1);
+            animation: cardEnter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .quiz-badge {
@@ -146,17 +145,17 @@
         }
 
         .btn-option {
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid #e2e8f0;
-            padding: 1.2rem;
-            border-radius: 1.1rem;
-            font-size: 1.15rem;
+            background: #ffffff;
+            border: 1.5px solid #eef2ff;
+            padding: 1.4rem;
+            border-radius: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--text-dark);
             cursor: pointer;
-            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-            box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
-            animation: optionEnter 0.3s ease both;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(15, 23, 42, 0.02);
+            animation: optionEnter 0.4s ease both;
         }
 
         .options-grid .btn-option:nth-child(2) { animation-delay: 0.06s; }
