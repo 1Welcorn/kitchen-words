@@ -453,13 +453,26 @@
     let currentReveal = null;
     let pendingMatchedItem = null;
 
-    function speak(text) {
-      const cleanText = String(text || '').replace(/[^a-zA-Z ]/g, '').trim();
-      if (!cleanText) return;
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.85;
+    function speak(text, onEnd = null) {
       window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voices = window.speechSynthesis.getVoices();
+      
+      const isPT = /[áàâãéèêíïóôõöúç]/i.test(text) || 
+                   ["Tente", "mais", "vez", "Parabéns", "Muito", "bem", "Objeto", "Ação"].some(w => text.includes(w));
+
+      if (isPT) {
+        utterance.lang = 'pt-BR';
+        utterance.voice = voices.find(v => v.lang.includes('pt-BR')) || voices.find(v => v.lang.includes('pt'));
+        utterance.rate = 1.0;
+      } else {
+        utterance.lang = 'en-US';
+        utterance.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Natural')) 
+                          || voices.find(v => v.lang.includes('en-US')) || voices.find(v => v.lang.includes('en'));
+        utterance.rate = 0.8;
+      }
+      
+      if (onEnd) utterance.onend = onEnd;
       window.speechSynthesis.speak(utterance);
     }
 

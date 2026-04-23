@@ -294,6 +294,12 @@
 </div>
 
 <script>
+    const questions = [
+        { img: "https://i.ibb.co/9kNp5Fpz/knife.png", word: "Knife", correct: "cut", options: ["cut", "drink", "open"] },
+        { img: "https://i.ibb.co/5pFpd9n/cup.png", word: "Cup", correct: "drink", options: ["mix", "drink", "cook"] },
+        { img: "https://i.ibb.co/0ygCvPkQ/fridge.png", word: "Fridge", correct: "open", options: ["open", "cut", "mix"] },
+        { img: "https://i.ibb.co/v4Jjxfpv/spoon.png", word: "Spoon", correct: "mix", options: ["mix", "cook", "drink"] },
+        { img: "https://i.ibb.co/TMVCmd1s/pan.png", word: "Pan", correct: "cook", options: ["drink", "cook", "cut"] }
     ];
 
     function shuffle(array) {
@@ -326,17 +332,24 @@
     function speak(text, onEnd = null) {
         window.speechSynthesis.cancel();
         const msg = new SpeechSynthesisUtterance(text);
+        const voices = window.speechSynthesis.getVoices();
         
-        if (femaleEnglishVoice) {
-            msg.voice = femaleEnglishVoice;
+        // Detecta se é português por palavras-chave ou acentos
+        const isPT = /[áàâãéèêíïóôõöúç]/i.test(text) || 
+                   ["Tente", "mais", "vez", "Parabéns", "acertou"].some(w => text.includes(w));
+
+        if (isPT) {
+            msg.lang = 'pt-BR';
+            msg.voice = voices.find(v => v.lang.includes('pt-BR')) || voices.find(v => v.lang.includes('pt'));
+            msg.rate = 1.0;
+        } else {
+            msg.lang = 'en-US';
+            msg.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Natural')) 
+                      || voices.find(v => v.lang.includes('en-US')) || voices.find(v => v.lang.includes('en'));
+            msg.rate = 0.75;
         }
         
-        msg.lang = 'en-US';
-        msg.rate = 0.72; // Slightly slower for clearer student comprehension
-        msg.pitch = 1.0;
-        if (onEnd) {
-            msg.onend = onEnd;
-        }
+        if (onEnd) msg.onend = onEnd;
         window.speechSynthesis.speak(msg);
     }
 
