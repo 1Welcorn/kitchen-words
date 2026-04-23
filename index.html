@@ -465,6 +465,8 @@
 
     function setStatus(text, ok = null) {
       dom.status.innerHTML = text;
+      dom.status.classList.remove('good', 'bad');
+      void dom.status.offsetWidth; // Force reflow to restart animation
       dom.status.className = 'status' + (ok === null ? '' : ok ? ' good' : ' bad');
     }
 
