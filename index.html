@@ -616,7 +616,9 @@
           }, 1200);
         }
       } else {
-        setStatus('❌ Par incorreto. Tente uma ação diferente.', false);
+        const wrongMsg = Math.random() > 0.5 ? "Try again" : "Tente mais uma vez";
+        speak(wrongMsg);
+        setStatus(`❌ Par incorreto. ${wrongMsg === 'Try again' ? 'Tente de novo' : wrongMsg}.`, false);
         selectedAction = null;
         render();
       }

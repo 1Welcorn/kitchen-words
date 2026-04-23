@@ -382,7 +382,8 @@
             }, 2200);
         } else {
             btn.classList.add('wrong');
-            speak("Ainda não. Tente de novo.");
+            const wrongMsg = Math.random() > 0.5 ? "Try again" : "Tente mais uma vez";
+            speak(wrongMsg);
             setTimeout(() => {
                 btn.classList.remove('wrong');
                 btns.forEach(b => b.disabled = false);
