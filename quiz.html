@@ -294,14 +294,18 @@
 </div>
 
 <script>
-    const questions = [
-        { img: "https://i.ibb.co/9kNp5Fpz/knife.png", word: "Knife", correct: "cut", options: ["cut", "drink", "open"] },
-        { img: "https://i.ibb.co/5pFpd9n/cup.png", word: "Cup", correct: "drink", options: ["mix", "drink", "cook"] },
-        { img: "https://i.ibb.co/0ygCvPkQ/fridge.png", word: "Fridge", correct: "open", options: ["open", "cut", "mix"] },
-        { img: "https://i.ibb.co/v4Jjxfpv/spoon.png", word: "Spoon", correct: "mix", options: ["mix", "cook", "drink"] },
-        { img: "https://i.ibb.co/TMVCmd1s/pan.png", word: "Pan", correct: "cook", options: ["drink", "cook", "cut"] }
     ];
 
+    function shuffle(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    let shuffledQuestions = shuffle(questions);
     let current = 0;
     let score = 0;
     let femaleEnglishVoice = null;
@@ -341,9 +345,9 @@
     }
 
     function load() {
-        const q = questions[current];
+        const q = shuffledQuestions[current];
         document.getElementById('display-image').src = q.img;
-        document.getElementById('progress').style.width = `${(current / questions.length) * 100}%`;
+        document.getElementById('progress').style.width = `${(current / shuffledQuestions.length) * 100}%`;
         
         const grid = document.getElementById('options');
         grid.innerHTML = "";
@@ -364,7 +368,7 @@
     }
 
     function check(choice, btn) {
-        const correct = questions[current].correct;
+        const correct = shuffledQuestions[current].correct;
         const btns = document.querySelectorAll('.btn-option');
 
         if(choice === correct) {
@@ -373,7 +377,7 @@
             score++;
             setTimeout(() => {
                 current++;
-                if(current < questions.length) load();
+                if(current < shuffledQuestions.length) load();
                 else finish();
             }, 2200);
         } else {
@@ -389,11 +393,12 @@
     function finish() {
         document.getElementById('game-view').classList.add('hidden');
         document.getElementById('result-view').classList.remove('hidden');
-        document.getElementById('score-text').innerText = `Você acertou ${score} de ${questions.length}!`;
+        document.getElementById('score-text').innerText = `Você acertou ${score} de ${shuffledQuestions.length}!`;
         speak("Parabéns! Você fez um ótimo trabalho.");
     }
 
     function restart() {
+        shuffledQuestions = shuffle(questions);
         current = 0; score = 0;
         document.getElementById('game-view').classList.remove('hidden');
         document.getElementById('result-view').classList.add('hidden');
