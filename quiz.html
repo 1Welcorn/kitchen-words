@@ -389,21 +389,23 @@
 
         if(choice === correct) {
             btn.classList.add('correct');
-            speak("Isso mesmo! " + choice);
             score++;
-            setTimeout(() => {
-                current++;
-                if(current < shuffledQuestions.length) load();
-                else finish();
-            }, 2200);
+            speak("Isso mesmo! " + choice, () => {
+                setTimeout(() => {
+                    current++;
+                    if(current < shuffledQuestions.length) load();
+                    else finish();
+                }, 1000);
+            });
         } else {
             btn.classList.add('wrong');
             const wrongMsg = Math.random() > 0.5 ? "Try again" : "Tente mais uma vez";
-            speak(wrongMsg);
-            setTimeout(() => {
-                btn.classList.remove('wrong');
-                btns.forEach(b => b.disabled = false);
-            }, 3200);
+            speak(wrongMsg, () => {
+                setTimeout(() => {
+                    btn.classList.remove('wrong');
+                    btns.forEach(b => b.disabled = false);
+                }, 1000);
+            });
         }
     }
 
