@@ -424,20 +424,7 @@
 </head>
 
 <body>
-  <div id="introView" class="intro-screen">
-    <div class="intro-header">
-      <h2>Guia de Estudo 📚</h2>
-      <p>Hoje falaremos dos objetos e ações que acontecem na cozinha. Sempre que possível, aponte ou segure nos objetos reais que serão mencionados.</p>
-    </div>
-
-    <div class="glossary-grid" id="glossary">
-      <!-- Glossary items will be injected here -->
-    </div>
-
-    <button class="btn" style="margin: auto; padding: 20px 60px; font-size: 24px;" onclick="startGame()">Começar Atividade ▶</button>
-  </div>
-
-  <div class="layout hidden" id="gameView">
+  <div class="layout" id="gameView">
     <aside class="sidebar">
       <h1>Kitchen Match ULTRA 🎮</h1>
       <p>Organize apenas <strong>objeto → ação</strong>. A terceira coluna já fica alinhada com as ações para dar suporte visual.</p>
@@ -796,27 +783,7 @@
       render();
     }
 
-    function startGame() {
-      document.getElementById('introView').classList.add('hidden');
-      document.getElementById('gameView').classList.remove('hidden');
-      resetGame();
-    }
-
-    function initGlossary() {
-      const glossary = document.getElementById('glossary');
-      data.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'glossary-item';
-        div.innerHTML = `
-          <img src="${item.img}" alt="${item.obj}">
-          <div>${item.obj}</div>
-        `;
-        div.onclick = () => speak(item.obj);
-        glossary.appendChild(div);
-      });
-    }
-
-    initGlossary();
+    resetGame();
   </script>
 </body>
 
