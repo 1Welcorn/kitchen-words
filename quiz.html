@@ -390,7 +390,7 @@
         if(choice === correct) {
             btn.classList.add('correct');
             score++;
-            speak("Isso mesmo! " + choice, () => {
+            speak("Isso mesmo!", () => {
                 setTimeout(() => {
                     current++;
                     if(current < shuffledQuestions.length) load();
