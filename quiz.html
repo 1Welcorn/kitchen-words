@@ -333,18 +333,22 @@
         const msg = new SpeechSynthesisUtterance(text);
         const voices = window.speechSynthesis.getVoices();
         
-        // Detecta se é português por palavras-chave ou acentos
+        // Detecção robusta: palavras comuns em PT ou acentos
         const isPT = /[áàâãéèêíïóôõöúç]/i.test(text) || 
-                   ["Tente", "mais", "vez", "Parabéns", "acertou"].some(w => text.includes(w));
+                   /\b(Tente|mais|vez|Parabéns|acertou|Isso|mesmo|Muito|bem|Pronto|Fase|Teste|final)\b/i.test(text);
 
         if (isPT) {
             msg.lang = 'pt-BR';
-            msg.voice = voices.find(v => v.lang.includes('pt-BR')) || voices.find(v => v.lang.includes('pt'));
+            // Prioridade para vozes brasileiras conhecidas
+            msg.voice = voices.find(v => v.lang === 'pt-BR') || 
+                        voices.find(v => v.lang.includes('pt')) ||
+                        voices.find(v => v.name.includes('Daniel') || v.name.includes('Maria') || v.name.includes('Luciana'));
             msg.rate = 1.0;
         } else {
             msg.lang = 'en-US';
-            msg.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Natural')) 
-                      || voices.find(v => v.lang.includes('en-US')) || voices.find(v => v.lang.includes('en'));
+            // Prioridade para vozes americanas naturais
+            msg.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Google US English') || (v.name.includes('Natural') && v.lang.includes('en-US'))) 
+                      || voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang.includes('en'));
             msg.rate = 0.75;
         }
         

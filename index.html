@@ -461,16 +461,18 @@
       const voices = window.speechSynthesis.getVoices();
       
       const isPT = /[áàâãéèêíïóôõöúç]/i.test(text) || 
-                   ["Tente", "mais", "vez", "Parabéns", "Muito", "bem", "Objeto", "Ação"].some(w => text.includes(w));
+                   /\b(Tente|mais|vez|Parabéns|Muito|bem|Objeto|Ação|Isso|mesmo|Pronto|Fase)\b/i.test(text);
 
       if (isPT) {
         utterance.lang = 'pt-BR';
-        utterance.voice = voices.find(v => v.lang.includes('pt-BR')) || voices.find(v => v.lang.includes('pt'));
+        utterance.voice = voices.find(v => v.lang === 'pt-BR') || 
+                          voices.find(v => v.lang.includes('pt')) ||
+                          voices.find(v => v.name.includes('Daniel') || v.name.includes('Maria'));
         utterance.rate = 1.0;
       } else {
         utterance.lang = 'en-US';
-        utterance.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Natural')) 
-                          || voices.find(v => v.lang.includes('en-US')) || voices.find(v => v.lang.includes('en'));
+        utterance.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Google US English') || (v.name.includes('Natural') && v.lang.includes('en-US'))) 
+                          || voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang.includes('en'));
         utterance.rate = 0.8;
       }
       
