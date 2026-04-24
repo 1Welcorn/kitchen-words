@@ -56,9 +56,9 @@
 
     .sidebar h1 {
       margin: 0;
-      font-size: 32px;
-      line-height: 1.1;
-      text-align: center;
+      font-size: 34px;
+      line-height: 1.05;
+      text-align: left;
     }
 
     .sidebar p {
@@ -66,17 +66,17 @@
       font-size: 18px;
       line-height: 1.5;
       color: rgba(255, 255, 255, .94);
-      text-align: center;
+      text-align: left;
     }
 
     .sidebar .side-note {
-      background: rgba(255, 255, 255, .14);
-      border: 1px solid rgba(255, 255, 255, .18);
+      background: rgba(255, 255, 255, .2);
+      border: 1px solid rgba(255, 255, 255, .3);
       border-radius: 18px;
-      padding: 16px;
+      padding: 20px;
       font-size: 15px;
       line-height: 1.5;
-      text-align: center;
+      text-align: left;
     }
 
     .app {
@@ -113,21 +113,16 @@
     }
 
     .col h3 {
-      margin: 0 0 14px;
-      font-size: 24px
+      margin: 0 0 20px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #1f2a44;
+      padding-top: 10px;
     }
 
-    .col.objects {
-      border-top: 6px solid var(--blue)
-    }
-
-    .col.actions {
-      border-top: 6px solid var(--purple)
-    }
-
-    .col.translations {
-      border-top: 6px solid var(--pink)
-    }
+    .col.objects { border-top: 5px solid #5b7cff; border-radius: 12px 12px 0 0; }
+    .col.actions { border-top: 5px solid #7f56d9; border-radius: 12px 12px 0 0; }
+    .col.translations { border-top: 5px solid #e255aa; border-radius: 12px 12px 0 0; }
 
     .card {
       background: linear-gradient(145deg, #ffffff, #f0f4ff);
@@ -278,18 +273,20 @@
     }
 
     .btn {
-      padding: 14px 18px;
-      border: none;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #5b7cff, #7f56d9);
+      background: linear-gradient(135deg, #6366f1, #818cf8);
       color: #fff;
-      cursor: pointer;
-      margin-top: 12px;
+      border: none;
+      padding: 18px 24px;
+      border-radius: 18px;
+      font-size: 20px;
       font-weight: 800;
-      font-size: 18px;
-      box-shadow: 0 10px 20px rgba(91, 124, 255, .25);
-      transition: all .2s ease;
-      letter-spacing: .3px
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, .1);
+      transition: .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
     .btn:hover {
@@ -391,11 +388,11 @@
 <body>
   <div class="layout">
     <aside class="sidebar">
-      <h1>Inglês na minha cozinha</h1>
-      <p>Temos 5 objetos para organizar. Vamos começar com os três primeiros!</p>
+      <h1>Kitchen Match ULTRA 🎮</h1>
+      <p>Organize apenas <strong>objeto → ação</strong>. A terceira coluna já fica alinhada com as ações para dar suporte visual.</p>
       <div class="side-note">Clique nos objetos e nas ações para ouvir o áudio em inglês. Arraste apenas as palavras das
         duas primeiras colunas.</div>
-      <button class="btn" id="resetBtnTop" type="button">Iniciar / Reiniciar</button>
+      <button class="btn" id="resetBtnTop" type="button"><span>▶</span> Iniciar / Reiniciar</button>
     </aside>
     <div class="app">
 
