@@ -426,8 +426,7 @@
 <body>
   <div class="layout" id="gameView">
     <aside class="sidebar">
-      <h1>Kitchen Match ULTRA 🎮</h1>
-      <p>Organize apenas <strong>objeto → ação</strong>. A terceira coluna já fica alinhada com as ações para dar suporte visual.</p>
+      <h1>APRENDENDO INGLÊS NA COZINHA</h1>
       <div class="side-note">Clique nos objetos e nas ações para ouvir o áudio em inglês. Arraste apenas as palavras das
         duas primeiras colunas.</div>
     </aside>
@@ -461,11 +460,11 @@
 
   <script>
     const data = [
-      { id: 1, obj: 'Knife', act: 'cut', tr: 'cortar', img: 'https://i.ibb.co/9kNp5Fpz/knife.png' },
-      { id: 2, obj: 'Pan', act: 'cook', tr: 'cozinhar', img: 'https://i.ibb.co/TMVCmd1s/pan.png' },
-      { id: 3, obj: 'Cup', act: 'drink', tr: 'beber', img: 'https://i.ibb.co/5pFpd9n/cup.png' },
-      { id: 4, obj: 'Fridge', act: 'open', tr: 'abrir', img: 'https://i.ibb.co/0ygCvPkQ/fridge.png' },
-      { id: 5, obj: 'Spoon', act: 'mix', tr: 'misturar', img: 'https://i.ibb.co/v4Jjxfpv/spoon.png' }
+      { id: 1, obj: 'Knife', act: 'cut', tr: 'cortar', img: 'images/knife.png' },
+      { id: 2, obj: 'Pan', act: 'cook', tr: 'cozinhar', img: 'images/pan.png' },
+      { id: 3, obj: 'Cup', act: 'drink', tr: 'beber', img: 'images/cup.png' },
+      { id: 4, obj: 'Fridge', act: 'open', tr: 'abrir', img: 'images/fridge.png' },
+      { id: 5, obj: 'Spoon', act: 'mix', tr: 'misturar', img: 'images/spoon.png' }
     ];
 
     const dom = {
@@ -511,7 +510,23 @@
     }
 
     function setStatus(text, ok = null) {
-      // Status bar removed
+      let status = document.getElementById('game-status');
+      if (!status) {
+        status = document.createElement('div');
+        status.id = 'game-status';
+        status.className = 'status';
+        // place the status right under the progress bar
+        const progressEl = dom.bar && dom.bar.parentNode ? dom.bar.parentNode : null;
+        if (progressEl && progressEl.parentNode) progressEl.parentNode.insertBefore(status, progressEl.nextSibling);
+        else document.body.insertBefore(status, document.body.firstChild);
+      }
+
+      status.classList.remove('good', 'bad');
+      if (ok === true) status.classList.add('good');
+      else if (ok === false) status.classList.add('bad');
+
+      if (typeof text === 'string') status.innerHTML = text;
+      else status.textContent = String(text);
     }
 
     function updateBar() {

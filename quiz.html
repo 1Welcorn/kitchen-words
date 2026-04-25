@@ -294,11 +294,11 @@
 
 <script>
     const questions = [
-        { img: "https://i.ibb.co/9kNp5Fpz/knife.png", word: "Knife", correct: "cut", options: ["cut", "drink", "open"] },
-        { img: "https://i.ibb.co/5pFpd9n/cup.png", word: "Cup", correct: "drink", options: ["mix", "drink", "cook"] },
-        { img: "https://i.ibb.co/0ygCvPkQ/fridge.png", word: "Fridge", correct: "open", options: ["open", "cut", "mix"] },
-        { img: "https://i.ibb.co/v4Jjxfpv/spoon.png", word: "Spoon", correct: "mix", options: ["mix", "cook", "drink"] },
-        { img: "https://i.ibb.co/TMVCmd1s/pan.png", word: "Pan", correct: "cook", options: ["drink", "cook", "cut"] }
+        { img: "images/knife.png", word: "Knife", correct: "cut", options: ["cut", "drink", "open"] },
+        { img: "images/cup.png", word: "Cup", correct: "drink", options: ["mix", "drink", "cook"] },
+        { img: "images/fridge.png", word: "Fridge", correct: "open", options: ["open", "cut", "mix"] },
+        { img: "images/spoon.png", word: "Spoon", correct: "mix", options: ["mix", "cook", "drink"] },
+        { img: "images/pan.png", word: "Pan", correct: "cook", options: ["drink", "cook", "cut"] }
     ];
 
     function shuffle(array) {
@@ -359,6 +359,10 @@
     function speakCurrent() {
         speak(shuffledQuestions[current].word);
     }
+
+    // ensure the floating audio button also triggers the speech
+    const audioBtn = document.querySelector('.audio-btn');
+    if (audioBtn) audioBtn.addEventListener('click', (e) => { e.stopPropagation(); speakCurrent(); });
 
     function load() {
         const q = shuffledQuestions[current];
