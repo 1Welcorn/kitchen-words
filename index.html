@@ -41,6 +41,13 @@
       min-width: 0
     }
 
+    @media (min-width: 1100px) {
+      /* move the game area up slightly so it aligns better with sidebar instructions */
+      .app {
+        margin-top: -10px;
+      }
+    }
+
     .sidebar {
       background: linear-gradient(180deg, #5b7cff 0%, #6d86ff 100%);
       color: #fff;
@@ -484,29 +491,44 @@
     let currentReveal = null;
     let pendingMatchedItem = null;
 
-    function speak(text, onEnd = null) {
-      window.speechSynthesis.cancel();
+    // Speech queue to avoid overlaps: enqueues utterances and plays sequentially
+    const _speechQueue = [];
+    let _speechRunning = false;
+
+    function _processSpeechQueue() {
+      if (_speechQueue.length === 0) {
+        _speechRunning = false;
+        return;
+      }
+      _speechRunning = true;
+      const { text, onEnd } = _speechQueue.shift();
       const utterance = new SpeechSynthesisUtterance(text);
       const voices = window.speechSynthesis.getVoices();
-      
-      const isPT = /[áàâãéèêíïóôõöúç]/i.test(text) || 
-                   /\b(Tente|mais|vez|Parabéns|Muito|bem|Objeto|Ação|Isso|mesmo|Pronto|Fase)\b/i.test(text);
+
+      const isPT = /[áàâãéèêíïóôõöúç]/i.test(text) || /\b(Tente|mais|vez|Parabéns|Muito|bem|Objeto|Ação|Isso|mesmo|Pronto|Fase)\b/i.test(text);
 
       if (isPT) {
         utterance.lang = 'pt-BR';
-        utterance.voice = voices.find(v => v.lang === 'pt-BR') || 
-                          voices.find(v => v.lang.includes('pt')) ||
-                          voices.find(v => v.name.includes('Daniel') || v.name.includes('Maria'));
+        utterance.voice = voices.find(v => v.lang === 'pt-BR') || voices.find(v => v.lang && v.lang.includes('pt')) || voices.find(v => (v.name||'').includes('Daniel') || (v.name||'').includes('Maria'));
         utterance.rate = 1.0;
       } else {
         utterance.lang = 'en-US';
-        utterance.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Google US English') || (v.name.includes('Natural') && v.lang.includes('en-US'))) 
-                          || voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang.includes('en'));
+        utterance.voice = voices.find(v => (v.name||'').includes('Samantha') || (v.name||'').includes('Google US English') || ((v.name||'').includes('Natural') && v.lang && v.lang.includes('en-US'))) || voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang && v.lang.includes('en'));
         utterance.rate = 0.8;
       }
-      
-      if (onEnd) utterance.onend = onEnd;
+
+      utterance.onend = () => {
+        if (onEnd) onEnd();
+        // small gap to prevent immediate overlap
+        setTimeout(_processSpeechQueue, 80);
+      };
+
       window.speechSynthesis.speak(utterance);
+    }
+
+    function speak(text, onEnd = null) {
+      _speechQueue.push({ text, onEnd });
+      if (!_speechRunning) _processSpeechQueue();
     }
 
     function setStatus(text, ok = null) {
