@@ -17,18 +17,19 @@
                 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
                 <style>
                     :root {
-                        --primary-color: #FFD166; /* Amarelo sol */
-                        --bg-color: #F0F4F8;      /* Azul acinzentado muito suave */
-                        --text-color: #2D3436;
+                        --primary-color: #FFD166;   /* Amarelo vibrante (Principal) */
+                        --secondary-color: #118AB2; /* Azul para botões */
+                        --bg-color: #F8FDFF;        /* Fundo quase branco, azulado e limpo */
                         --card-bg: #FFFFFF;
-                        --correct-color: #06D6A0; /* Verde menta */
-                        --wrong-color: #EF476F;   /* Rosa avermelhado */
+                        --option-btn: #E0FBFC;      /* Azul clarinho para os botões de opção */
+                        --correct-color: #06D6A0;   /* Verde sucesso */
+                        --wrong-color: #EF476F;     /* Rosa/Vermelho erro */
                     }
 
                     body {
                         font-family: 'Lexend', sans-serif;
                         background-color: var(--bg-color);
-                        color: var(--text-color);
+                        color: var(--secondary-color);
                         display: flex;
                         flex-direction: column;
                         align-items: center;
@@ -38,103 +39,62 @@
                         padding: 20px;
                     }
 
-                    .header {
-                        text-align: center;
-                        margin-bottom: 20px;
-                    }
+                    .header { text-align: center; margin-bottom: 20px; }
+                    .header h1 { margin: 0; font-size: 2rem; color: var(--secondary-color); }
 
-                    .header h1 {
-                        margin: 0;
-                        font-size: 2rem;
-                        color: #118AB2;
-                    }
-
-                    /* Container Principal Centralizado */
+                    /* Estilo do Card Principal */
                     .game-container {
+                        border: 8px solid #F0F4F8; /* Uma borda interna suave */
                         background: var(--card-bg);
-                        border-radius: 40px;
+                        border-radius: 50px;
                         padding: 40px;
-                        box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+                        box-shadow: 0 20px 40px rgba(17, 138, 178, 0.1);
                         display: flex;
                         flex-direction: column;
-                        align-items: center; /* Centraliza tudo horizontalmente */
-                        text-align: center;
+                        align-items: center;
                         max-width: 450px;
                         width: 100%;
                     }
 
-                    /* Moldura da Imagem Centralizada */
                     .word-image {
-                        width: 220px;
-                        height: 220px;
-                        background: #F8F9FA;
-                        margin-bottom: 25px;
-                        border-radius: 30px;
-                        border: 5px dashed var(--primary-color);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 110px; /* Tamanho do emoji */
-                        transition: transform 0.3s ease;
+                        width: 220px; height: 220px; background: #F8F9FA; margin-bottom: 25px;
+                        border-radius: 30px; border: 5px dashed var(--primary-color);
+                        display: flex; align-items: center; justify-content: center; font-size: 110px;
                     }
 
+                    /* Ajuste no Texto da Palavra Principal */
                     .word-text {
-                        font-size: 3.5rem;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                        letter-spacing: 4px;
-                        margin-bottom: 30px;
-                        color: #073B4C;
+                        font-size: 3.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 5px;
+                        margin-bottom: 30px; color: var(--secondary-color); text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
                     }
 
                     /* Grade de Opções */
-                    .options-grid {
-                        display: grid;
-                        grid-template-columns: 1fr 1fr;
-                        gap: 15px;
-                        width: 100%;
-                    }
+                    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
 
+                    /* Estilo dos Botões de Opção */
                     button {
-                        padding: 22px 10px;
-                        font-family: 'Lexend', sans-serif;
-                        font-size: 1.3rem;
-                        font-weight: 700;
-                        border: none;
-                        border-radius: 20px;
-                        background: #E5E9F0;
-                        color: #4C566A;
-                        cursor: pointer;
-                        transition: all 0.2s;
+                        padding: 20px 10px; font-family: 'Lexend', sans-serif; font-size: 1.4rem; font-weight: 700;
+                        border: none; border-radius: 25px; background: var(--option-btn); color: var(--secondary-color);
+                        cursor: pointer; box-shadow: 0 6px 0 #98D8E3; transition: all 0.1s; position: relative;
                     }
 
-                    button:active {
-                        transform: scale(0.95);
-                    }
+                    /* Efeito de Clique - O botão "afunda" */
+                    button:active { transform: translateY(4px); box-shadow: 0 2px 0 #98D8E3; }
 
-                    /* Feedback Visual */
+                    /* Feedback de Acerto */
                     .correct { 
-                        background-color: var(--correct-color) !important; 
-                        color: white !important;
-                        animation: bounce 0.5s;
+                        background-color: var(--correct-color) !important; color: white !important;
+                        box-shadow: 0 6px 0 #05A87D !important; animation: bounce 0.5s;
                     }
 
+                    /* Feedback de Erro */
                     .wrong { 
-                        background-color: var(--wrong-color) !important; 
-                        color: white !important;
-                        animation: shake 0.4s;
+                        background-color: var(--wrong-color) !important; color: white !important;
+                        box-shadow: 0 6px 0 #C13959 !important; animation: shake 0.4s;
                     }
 
-                    @keyframes bounce {
-                        0%, 100% { transform: scale(1); }
-                        50% { transform: scale(1.1); }
-                    }
-
-                    @keyframes shake {
-                        0%, 100% { transform: translateX(0); }
-                        25% { transform: translateX(-10px); }
-                        75% { transform: translateX(10px); }
-                    }
+                    @keyframes bounce { 0%,100%{transform:scale(1);}50%{transform:scale(1.1);} }
+                    @keyframes shake { 0%,100%{transform:translateX(0);}25%{transform:translateX(-10px);}75%{transform:translateX(10px);} }
                 </style>
             </head>
             <body>
