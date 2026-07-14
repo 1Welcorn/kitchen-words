@@ -1,36 +1,250 @@
-<!-- Cole este seletor de idiomas em um local visível do seu index.html -->
-<div class="lang-selector-container" style="display: flex; gap: 8px; justify-content: center; margin: 20px 0;">
-  <button class="lang-btn" id="btnPt" onclick="changeHomeLanguage('pt')" style="font-size: 24px; cursor: pointer; background: none; border: none;">🇧🇷 PT</button>
-  <button class="lang-btn" id="btnEs" onclick="changeHomeLanguage('es')" style="font-size: 24px; cursor: pointer; background: none; border: none;">🇪🇸 ES</button>
-  <button class="lang-btn" id="btnFa" onclick="changeHomeLanguage('fa')" style="font-size: 24px; cursor: pointer; background: none; border: none;">🇦🇫 دری</button>
-</div>
-
-<script>
-  // Função para mudar o idioma e guardar na memória do navegador
-  function changeHomeLanguage(lang) {
-    localStorage.setItem('kitchen_words_lang', lang);
-    
-    // Opcional: Se você quiser traduzir os textos da página inicial dinamicamente
-    translateIndexPage(lang);
-  }
-
-  function translateIndexPage(lang) {
-    const dir = lang === 'fa' ? 'rtl' : 'ltr';
-    document.body.setAttribute('dir', dir);
-    
-    // Aqui você pode adicionar traduções para os botões do index.html se quiser:
-    if (lang === 'fa') {
-      // Exemplo: document.getElementById('btnStart').textContent = 'شروع بازی';
-    } else if (lang === 'es') {
-      // Exemplo: document.getElementById('btnStart').textContent = 'Jugar';
-    } else {
-      // Exemplo: document.getElementById('btnStart').textContent = 'Jogar';
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozinha em Inglês — Menu</title>
+  <link rel="icon" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream:    #FFF6E5;
+      --cream-2:  #FFEFD0;
+      --ink:      #2B2541;
+      --ink-soft: #5A5170;
+      --teal:     #2EC4B6;
+      --teal-dk:  #1FA89B;
+      --coral:    #FF6B6B;
+      --coral-dk: #E84F4F;
+      --yellow:   #FFD166;
+      --yellow-dk: #E8B848;
+      --lilac:    #B8A1FF;
+      --lilac-dk: #9A82E6;
+      --shadow:   0 6px 0 rgba(43, 37, 65, 0.15);
     }
-  }
 
-  // Ao carregar a página inicial, verifica se já existe um idioma salvo
-  window.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('kitchen_words_lang') || 'pt';
-    changeHomeLanguage(savedLang);
-  });
-</script>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Fredoka', system-ui, sans-serif;
+      font-weight: 500;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 80% 10%, rgba(255, 209, 102, 0.25), transparent 40%),
+        radial-gradient(circle at 10% 90%, rgba(184, 161, 255, 0.22), transparent 40%),
+        radial-gradient(circle at 50% 50%, var(--cream-2) 0%, var(--cream) 70%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+      transition: direction 0.3s ease;
+    }
+
+    /* Decorativos Flutuantes */
+    .deco {
+      position: fixed;
+      pointer-events: none;
+      opacity: 0.45;
+      z-index: 0;
+    }
+    .deco-1 { top: 12%; left: 6%; font-size: 36px; animation: float 8s ease-in-out infinite; }
+    .deco-2 { top: 30%; right: 5%; font-size: 42px; animation: float 7s ease-in-out infinite -2s; }
+    .deco-3 { bottom: 12%; left: 9%; font-size: 38px; animation: float 9s ease-in-out infinite -4s; }
+    .deco-4 { bottom: 18%; right: 8%; font-size: 32px; animation: float 6.5s ease-in-out infinite -1s; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50%      { transform: translateY(-16px) rotate(5deg); }
+    }
+
+    /* Container do Menu Principal */
+    .menu-card {
+      background: #fff;
+      border: 5px solid var(--ink);
+      border-radius: 36px;
+      padding: 40px 30px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 0 rgba(43, 37, 65, 0.18);
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: 36px;
+      margin: 0 0 8px;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      font-family: 'Caveat', cursive;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--lilac-dk);
+      margin: 0 0 24px;
+    }
+
+    p {
+      font-size: 18px;
+      color: var(--ink-soft);
+      line-height: 1.4;
+      margin: 0 0 30px;
+    }
+
+    /* Seletor de Idiomas Lindo e Compacto */
+    .lang-selector-container {
+      background: rgba(255, 255, 255, 0.9);
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 4px;
+      display: inline-flex;
+      gap: 6px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: transform 0.1s, background-color 0.2s;
+    }
+    .lang-btn:hover { transform: scale(1.1); }
+    .lang-btn.active {
+      background-color: var(--lilac);
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
+    }
+
+    /* Botão Iniciar Grande */
+    .btn-big {
+      display: block;
+      width: 100%;
+      padding: 18px 24px;
+      background: var(--green);
+      color: #fff;
+      border: 4px solid var(--ink);
+      border-radius: 22px;
+      font-family: 'Fredoka';
+      font-weight: 700;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 6px 0 var(--ink);
+      transition: transform 0.08s, box-shadow 0.08s, background-color 0.2s;
+      text-decoration: none;
+      text-align: center;
+    }
+    .btn-big:hover { transform: translateY(-2px); box-shadow: 0 8px 0 var(--ink); background-color: var(--green-dk); }
+    .btn-big:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ink); }
+
+    @media (max-width: 520px) {
+      .menu-card { padding: 30px 20px; border-radius: 28px; }
+      h1 { font-size: 28px; }
+      .deco { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deco deco-1">⭐</div>
+  <div class="deco deco-2">🍳</div>
+  <div class="deco deco-3">🥄</div>
+  <div class="deco deco-4">🍴</div>
+
+  <main class="menu-card">
+    <img class="logo-img" src="favicon.png" alt="Logo">
+    
+    <h1 id="homeTitle">Cozinha em Inglês</h1>
+    <div class="subtitle" id="homeSubtitle">Fase 2 — Teste final</div>
+    
+    <p id="homeDesc">Aprenda brincando o vocabulário de cozinha em inglês e teste seus conhecimentos!</p>
+
+    <!-- Seletor de Idiomas no Centro do Menu -->
+    <div class="lang-selector-container">
+      <button class="lang-btn active" id="btnPt" onclick="changeHomeLanguage('pt')" title="Português">🇧🇷 PT</button>
+      <button class="lang-btn" id="btnEs" onclick="changeHomeLanguage('es')" title="Español">🇪🇸 ES</button>
+      <button class="lang-btn" id="btnFa" onclick="changeHomeLanguage('fa')" title="دری (Dari)">🇦🇫 دری</button>
+    </div>
+
+    <!-- Botão de Iniciar que direciona para o quiz.html -->
+    <a href="quiz.html" class="btn-big" id="btnStart">Iniciar Jogo 🚀</a>
+  </main>
+
+  <script>
+    /* ---------- TRANSLATIONS ---------- */
+    const homeTranslations = {
+      pt: {
+        dir: 'ltr',
+        title: 'Cozinha em Inglês',
+        subtitle: 'Fase 2 — Teste final',
+        desc: 'Aprenda brincando o vocabulário de cozinha em inglês e teste seus conhecimentos!',
+        btnStart: 'Iniciar Jogo 🚀'
+      },
+      es: {
+        dir: 'ltr',
+        title: 'Cocina en Inglés',
+        subtitle: 'Fase 2 — Prueba final',
+        desc: '¡Aprende jugando el vocabulario de cocina en inglés y prueba tus conocimientos!',
+        btnStart: 'Iniciar Juego 🚀'
+      },
+      fa: {
+        dir: 'rtl',
+        title: 'آشپزخانه به انگلیسی',
+        subtitle: 'مرحله ۲ — آزمون نهایی',
+        desc: 'واژگان آشپزخانه را به زبان انگلیسی با بازی یاد بگیرید و دانش خود را آزمایش کنید!',
+        btnStart: 'شروع بازی 🚀'
+      }
+    };
+
+    /* ---------- DOM ELEMENTS ---------- */
+    const elTitle = document.getElementById('homeTitle');
+    const elSubtitle = document.getElementById('homeSubtitle');
+    const elDesc = document.getElementById('homeDesc');
+    const elBtnStart = document.getElementById('btnStart');
+
+    /* ---------- LANGUAGE LOGIC ---------- */
+    function changeHomeLanguage(lang) {
+      localStorage.setItem('kitchen_words_lang', lang);
+      
+      // Altera a classe ativa nos botões seletores
+      document.getElementById('btnPt').classList.toggle('active', lang === 'pt');
+      document.getElementById('btnEs').classList.toggle('active', lang === 'es');
+      document.getElementById('btnFa').classList.toggle('active', lang === 'fa');
+
+      const t = homeTranslations[lang];
+      
+      // Ajusta alinhamento e direção de escrita da página
+      document.body.setAttribute('dir', t.dir);
+      document.documentElement.setAttribute('lang', lang);
+
+      // Aplica as traduções
+      elTitle.textContent = t.title;
+      elSubtitle.textContent = t.subtitle;
+      elDesc.textContent = t.desc;
+      elBtnStart.textContent = t.btnStart;
+    }
+
+    // Inicializa a página lendo a memória ou em português
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('kitchen_words_lang') || 'pt';
+      changeHomeLanguage(savedLang);
+    });
+  </script>
+</body>
+</html>
