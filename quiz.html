@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cozinha em Inglês — Fase 2 (Verbos)</title>
+  <title>Cozinha em Inglês — Fase 2 (Ações)</title>
   <link rel="icon" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,6 @@
       transition: direction 0.3s ease;
     }
 
-    /* Floating decorations */
     .deco {
       position: fixed;
       pointer-events: none;
@@ -272,7 +271,7 @@
     /* Options grid */
     .options {
       display: grid;
-      grid-template-columns: 1fr; /* Mudado para 1 coluna larga para acomodar frases de ação melhor */
+      grid-template-columns: 1fr;
       gap: 12px;
       margin-top: 8px;
     }
@@ -312,20 +311,42 @@
     .feedback.good { background: #DDFBED; border-color: var(--green-dk); }
     .feedback.bad  { background: #FFE0E5; border-color: var(--red); }
 
-    /* Reveal Card */
+    /* Novo Card de Revelação com Frase Dinâmica para Completar */
     .reveal {
       margin-top: 18px; background: var(--yellow);
       border: 4px solid var(--ink); border-radius: 24px;
-      padding: 18px 16px; box-shadow: 0 6px 0 var(--ink);
+      padding: 22px 18px; box-shadow: 0 6px 0 var(--ink);
       display: none; text-align: center;
+      animation: revealPop 0.4s cubic-bezier(.34, 1.56, .64, 1);
     }
     .reveal.show { display: block; }
-    .reveal .word-en { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 30px; color: var(--ink); text-transform: uppercase; }
-    .reveal .equals { display: inline-block; margin: 4px 6px; font-size: 22px; color: var(--coral); font-weight: 700; }
-    .reveal .word-pt { font-family: 'Fredoka', sans-serif; font-size: 24px; font-weight: 700; color: var(--ink); }
-    .reveal .word-pt.dari-text { color: var(--coral-dk); }
+    @keyframes revealPop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    
+    .reveal .sentence-box {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--ink);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .reveal .completed-chunk {
+      color: var(--coral-dk);
+      border-bottom: 3px solid var(--coral);
+      padding: 0 4px;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+    .reveal .translation-box {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink-soft);
+      margin-bottom: 14px;
+    }
+
     .reveal .replay-mini {
-      display: inline-block; margin-top: 6px; padding: 6px 14px;
+      display: inline-block; padding: 6px 14px;
       background: #fff; border: 3px solid var(--ink); border-radius: 999px;
       font-family: 'Fredoka'; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: 0 3px 0 var(--ink);
     }
@@ -384,10 +405,10 @@
       <div class="options" id="options"></div>
       <div class="feedback" id="feedback"></div>
 
+      <!-- Estrutura de Revelação com a Frase Completa Otimizada -->
       <div class="reveal" id="reveal">
-        <div class="word-en" id="revealWord"></div>
-        <span class="equals">=</span>
-        <span class="word-pt" id="revealTr"></span>
+        <div class="sentence-box" id="revealSentence"></div>
+        <div class="translation-box" id="revealTranslation"></div>
         <div><button class="replay-mini" id="replayMini">🔊 Ouvir de novo</button></div>
       </div>
     </section>
@@ -408,96 +429,79 @@
     /* ---------- TRANSLATIONS ---------- */
     const translations = {
       pt: {
-        dir: 'ltr',
-        logoTitle: 'Cozinha em Inglês',
-        logoSubtitle: 'Fase 2 — Ações e Verbos',
-        qPrompt: 'O que fazemos com isso?',
-        qTitle: 'Escolha a ação certa em inglês',
-        feedbackGood: 'Muito bem! 🎉',
-        feedbackAlmost: 'Quase! Tente outra 💪',
-        audioReplay: '🔊 Ouvir de novo',
-        endGood: 'Incrível! 🎉',
-        endGoodSub: 'Você é fera nas ações da cozinha!',
-        endMedium: 'Muito bem!',
-        endMediumSub: 'Você está aprendendo rápido!',
-        endBad: 'Bom trabalho!',
-        endBadSub: 'Vamos treinar mais um pouco?',
-        endFail: 'Boa tentativa!',
-        endFailSub: 'Quase lá — bora de novo?',
-        restartBtn: 'Jogar de novo 🔁',
-        backBtn: 'Voltar ao início',
-        lblHits: 'Acertos',
-        lblDone: 'Concluído!',
-        lblQuestion: 'Pergunta',
-        voiceGood: 'Great job!',
-        voiceAlmost: 'Try again'
+        dir: 'ltr', logoTitle: 'Cozinha em Inglês', logoSubtitle: 'Fase 2 — Ações e Verbos', qPrompt: 'O que fazemos com isso?', qTitle: 'Escolha a ação certa em inglês',
+        feedbackGood: 'Muito bem! 🎉', feedbackAlmost: 'Quase! Tente outra 💪', audioReplay: '🔊 Ouvir a frase de novo',
+        endGood: 'Incrível! 🎉', endGoodSub: 'Você dominou as ações da cozinha!', endMedium: 'Muito bem!', endMediumSub: 'Você está aprendendo rápido!',
+        endBad: 'Bom trabalho!', endBadSub: 'Vamos treinar mais um pouco?', endFail: 'Boa tentativa!', endFailSub: 'Quase lá — bora de novo?',
+        restartBtn: 'Jogar de novo 🔁', backBtn: 'Voltar ao início', lblHits: 'Acertos', lblDone: 'Concluído!', lblQuestion: 'Pergunta', voiceGood: 'Great job!', voiceAlmost: 'Try again'
       },
       es: {
-        dir: 'ltr',
-        logoTitle: 'Cocina en Inglés',
-        logoSubtitle: 'Fase 2 — Acciones y Verbos',
-        qPrompt: '¿Qué hacemos con esto?',
-        qTitle: 'Elige la acción correcta en inglés',
-        feedbackGood: '¡Muy bien! 🎉',
-        feedbackAlmost: '¡Casi! Intenta otra 💪',
-        audioReplay: '🔊 Escuchar de nuevo',
-        endGood: '¡Increíble! 🎉',
-        endGoodSub: '¡Eres genial con las acciones!',
-        endMedium: '¡Muy bien!',
-        endMediumSub: '¡Estás aprendiendo rápido!',
-        endBad: '¡Buen trabajo!',
-        endBadSub: '¿Practicamos un poco más?',
-        endFail: '¡Buen intento!',
-        endFailSub: 'Casi allí — ¿otra vez?',
-        restartBtn: 'Jugar de nuevo 🔁',
-        backBtn: 'Volver al inicio',
-        lblHits: 'Aciertos',
-        lblDone: '¡Completado!',
-        lblQuestion: 'Pregunta',
-        voiceGood: 'Great job!',
-        voiceAlmost: 'Try again'
+        dir: 'ltr', logoTitle: 'Cocina en Inglés', logoSubtitle: 'Fase 2 — Acciones y Verbos', qPrompt: '¿Qué hacemos con esto?', qTitle: 'Elige la acción correcta en inglés',
+        feedbackGood: '¡Muy bien! 🎉', feedbackAlmost: '¡Casi! Intenta otra 💪', audioReplay: '🔊 Escuchar frase de nuevo',
+        endGood: '¡Increíble! 🎉', endGoodSub: '¡Eres genial con las acciones!', endMedium: '¡Muy bien!', endMediumSub: '¡Estás aprendiendo rápido!',
+        endBad: '¡Buen trabajo!', endBadSub: '¿Practicamos un poco más?', endFail: '¡Buen intento!', endFailSub: 'Casi allí — ¿otra vez?',
+        restartBtn: 'Jugar de nuevo 🔁', backBtn: 'Volver al inicio', lblHits: 'Aciertos', lblDone: '¡Completado!', lblQuestion: 'Pregunta', voiceGood: 'Great job!', voiceAlmost: 'Try again'
       },
       fa: {
-        dir: 'rtl',
-        logoTitle: 'آشپزخانه به انگلیسی',
-        logoSubtitle: 'مرحله ۲ — افعال و کارها',
-        qPrompt: 'با این وسیله چه کاری انجام می‌دهیم؟',
-        qTitle: 'کار و فعل انگلیسی درست را انتخاب کنید',
-        feedbackGood: 'بسیار عالی! 🎉',
-        feedbackAlmost: 'تقریباً درست بود! یکی دیگر را امتحان کنید 💪',
-        audioReplay: '🔊 گوش دادن دوباره',
-        endGood: 'عالی بود! 🎉',
-        endGoodSub: 'شما در یادگیری افعال آشپزخانه فوق‌العاده هستید!',
-        endMedium: 'بسیار خوب!',
-        endMediumSub: 'شما به سرعت در حال یادگیری هستید!',
-        endBad: 'کار خوبی بود!',
-        endBadSub: 'بیایید کمی بیشتر تمرین کنیم؟',
-        endFail: 'تلاش خوبی بود!',
-        endFailSub: 'تقریبا رسیدید — دوباره امتحان کنید؟',
-        restartBtn: 'دوباره بازی کنید 🔁',
-        backBtn: 'بازگشت به خانه',
-        lblHits: 'پاسخ‌های صحیح',
-        lblDone: 'کامل شد!',
-        lblQuestion: 'سوال',
-        voiceGood: 'Great job!',
-        voiceAlmost: 'Try again'
+        dir: 'rtl', logoTitle: 'آشپزخانه به انگلیسی', logoSubtitle: 'مرحله ۲ — افعال و کارها', qPrompt: 'با این وسیله چه کاری انجام می‌دهیم؟', qTitle: 'کار و فعل انگلیسی درست را انتخاب کنید',
+        feedbackGood: 'بسیار عالی! 🎉', feedbackAlmost: 'تقریباً درست بود! یکی دیگر را امتحان کنید 💪', audioReplay: '🔊 گوش دادن به جمله نهایی',
+        endGood: 'عالی بود! 🎉', endGoodSub: 'شما در یادگیری افعال آشپزخانه فوق‌العاده هستید!', endMedium: 'بسیار خوب!', endMediumSub: 'شما به سرعت در حال یادگیری هستید!',
+        endBad: 'کار خوبی بود!', endBadSub: 'بیایید کمی بیشتر تمرین کنیم؟', endFail: 'تلاش خوبی بود!', endFailSub: 'تقریبا رسیدید — دوباره امتحان کنید؟',
+        restartBtn: 'دوباره بازی کنید 🔁', backBtn: 'بازگشت به خانه', lblHits: 'پاسخ‌های صحیح', lblDone: 'کامل شد!', lblQuestion: 'سوال', voiceGood: 'Great job!', voiceAlmost: 'Try again'
       }
     };
 
-    /* ---------- DATA (Focado na relação pedagógica Verbo + Objeto) ---------- */
+    /* ---------- DATA (Com o Scaffolding da frase) ---------- */
     const questions = [
-      { word: 'CLEAN THE FRIDGE', img: 'images/fridge.png', tr: { pt: 'Limpar a geladeira', es: 'Limpiar el refrigerador', fa: 'پاک کردن یخچال' }, options: ['CLEAN THE FRIDGE', 'BOIL THE WATER', 'BAKE A CAKE', 'SET THE TABLE'] },
-      { word: 'STIR WITH THE SPOON',  img: 'images/spoon.png',  tr: { pt: 'Mexer com a colher', es: 'Mover con la cuchara', fa: 'هم زدن با قاشق' },    options: ['WASH THE DISHES', 'STIR WITH THE SPOON', 'CUT THE MEAT', 'SERVE THE FOOD'] },
-      { word: 'CUT WITH THE KNIFE',  img: 'images/knife.png',  tr: { pt: 'Cortar com a faca', es: 'Cortar con el cuchillo', fa: 'بریدن با چاقو' },      options: ['DRINK WATER', 'FRY AN EGG', 'CUT WITH THE KNIFE', 'MIX THE INGREDIENTS'] },
-      { word: 'COOK IN THE PAN',    img: 'images/pan.png',    tr: { pt: 'Cozinhar na panela', es: 'Cocinar en la olla', fa: 'پختن در دیگ' },       options: ['OPEN THE DOOR', 'FREEZE THE ICE', 'COOK IN THE PAN', 'WASH YOUR HANDS'] },
-      { word: 'POUR INTO THE CUP',    img: 'images/cup.png',    tr: { pt: 'Despejar no copo', es: 'Verter en el vaso', fa: 'ریختن داخل گیلاس (لیوان)' },      options: ['POUR INTO THE CUP', 'CLEAN THE FLOOR', 'PEEL THE POTATO', 'HEAT THE FOOD'] }
+      { 
+        word: 'CLEAN THE FRIDGE', 
+        img: 'images/fridge.png', 
+        options: ['CLEAN THE FRIDGE', 'BOIL THE WATER', 'BAKE A CAKE', 'SET THE TABLE'],
+        // Lógica de completar: texto fixo inicial + o pedaço que completa
+        sentencePre: 'I open and ',
+        sentencePost: ' every weekend.',
+        tr: { pt: 'Eu abro e limpo a geladeira todo fim de semana.', es: 'Abro y limpio el refrigerador cada fin de semana.', fa: 'من هر آخر هفته یخچال را باز و تمیز می‌کنم.' }
+      },
+      { 
+        word: 'STIR WITH THE SPOON',  
+        img: 'images/spoon.png',  
+        options: ['WASH THE DISHES', 'STIR WITH THE SPOON', 'CUT THE MEAT', 'SERVE THE FOOD'],
+        sentencePre: 'Please, ',
+        sentencePost: ' the hot soup.',
+        tr: { pt: 'Por favor, mexa com a colher a sopa quente.', es: 'Por favor, mueve con la cuchara la sopa caliente.', fa: 'لطفا سوپ داغ را با قاشق هم بزنید.' }
+      },
+      { 
+        word: 'CUT WITH THE KNIFE',  
+        img: 'images/knife.png',  
+        options: ['DRINK WATER', 'FRY AN EGG', 'CUT WITH THE KNIFE', 'MIX THE INGREDIENTS'],
+        sentencePre: 'Be careful when you ',
+        sentencePost: '!',
+        tr: { pt: 'Tenha cuidado quando você cortar com a faca!', es: '¡Ten cuidado cuando cortes con el cuchillo!', fa: 'مراقب باش وقتی با چاقو می‌بری!' }
+      },
+      { 
+        word: 'COOK IN THE PAN',    
+        img: 'images/pan.png',    
+        options: ['OPEN THE DOOR', 'FREEZE THE ICE', 'COOK IN THE PAN', 'WASH YOUR HANDS'],
+        sentencePre: 'We can ',
+        sentencePost: ' on the stove.',
+        tr: { pt: 'Nós podemos cozinhar na panela sobre o fogão.', es: 'Podemos cocinar en la olla sobre la estufa.', fa: 'ما می‌توانیم در دیگ روی اجاق گاز آشپزی کنیم.' }
+      },
+      { 
+        word: 'POUR INTO THE CUP',    
+        img: 'images/cup.png',    
+        options: ['POUR INTO THE CUP', 'CLEAN THE FLOOR', 'PEEL THE POTATO', 'HEAT THE FOOD'],
+        sentencePre: 'Let’s ',
+        sentencePost: ' some fresh orange juice.',
+        tr: { pt: 'Vamos despejar no copo um pouco de suco de laranja fresco.', es: 'Vamos a verter en el vaso un poco de jugo de naranja fresco.', fa: 'بیایید کمی آب پرتقال تازه داخل گیلاس (لیwan) بریزیم.' }
+      }
     ];
 
     /* ---------- STATE ---------- */
     const state = { idx: 0, score: 0, lives: 3, locked: false, attempts: 0, lang: 'pt' };
 
     /* ---------- DOM ---------- */
-    const qImage = document.getElementById('qImage'); const audioBtn = document.getElementById('audioBtn'); const optionsEl = document.getElementById('options'); const feedback = document.getElementById('feedback'); const progressFill = document.getElementById('progressFill'); const progressLabel = document.getElementById('progressLabel'); const livesEl = document.getElementById('lives'); const endOverlay = document.getElementById('endOverlay'); const endTitle = document.getElementById('endTitle'); const endSubtitle = document.getElementById('endSubtitle'); const starsRow = document.getElementById('starsRow'); const finalScore = document.getElementById('finalScore'); const restartBtn = document.getElementById('restartBtn'); const qCard = document.getElementById('qCard'); const reveal = document.getElementById('reveal'); const revealWord = document.getElementById('revealWord'); const revealTr = document.getElementById('revealTr'); const replayMini = document.getElementById('replayMini');
+    const qImage = document.getElementById('qImage'); const audioBtn = document.getElementById('audioBtn'); const optionsEl = document.getElementById('options'); const feedback = document.getElementById('feedback'); const progressFill = document.getElementById('progressFill'); const progressLabel = document.getElementById('progressLabel'); const livesEl = document.getElementById('lives'); const endOverlay = document.getElementById('endOverlay'); const endTitle = document.getElementById('endTitle'); const endSubtitle = document.getElementById('endSubtitle'); const starsRow = document.getElementById('starsRow'); const finalScore = document.getElementById('finalScore'); const restartBtn = document.getElementById('restartBtn'); const qCard = document.getElementById('qCard'); 
+    const reveal = document.getElementById('reveal'); const revealSentence = document.getElementById('revealSentence'); const revealTranslation = document.getElementById('revealTranslation'); const replayMini = document.getElementById('replayMini');
     const elLogoTitle = document.getElementById('logoTitle'); const elLogoSubtitle = document.getElementById('logoSubtitle'); const elQPrompt = document.getElementById('qPrompt'); const elQTitle = document.getElementById('qTitle'); const elRestartBtn = document.getElementById('restartBtn'); const elBackBtn = document.getElementById('backBtn'); const elLblHits = document.getElementById('lblHits');
 
     /* ---------- LANGUAGE SYSTEM ---------- */
@@ -519,8 +523,7 @@
       if (reveal.classList.contains('show')) {
         const q = questions[state.idx - 1] || questions[state.idx];
         if (q) {
-          revealTr.textContent = q.tr[state.lang];
-          revealTr.className = 'word-pt ' + (state.lang === 'fa' ? 'dari-text' : '');
+          revealTranslation.textContent = q.tr[state.lang];
         }
       }
     }
@@ -533,13 +536,8 @@
       const { text, lang, onEnd } = speechQueue.shift();
       if (!('speechSynthesis' in window)) { speechRunning = false; if (onEnd) onEnd(); return; }
       const u = new SpeechSynthesisUtterance(text); const voices = window.speechSynthesis.getVoices();
-      if (lang === 'pt') {
-        u.lang = 'pt-BR'; u.voice = voices.find(v => v.lang === 'pt-BR') || null; u.rate = 1.0;
-      } else {
-        u.lang = 'en-US';
-        u.voice = voices.find(v => /Samantha|Google US English|Natural/i.test(v.name||'')) || voices.find(v => v.lang === 'en-US') || null;
-        u.rate = 0.85;
-      }
+      u.lang = lang === 'pt' ? 'pt-BR' : 'en-US';
+      u.rate = lang === 'pt' ? 1.0 : 0.80; // Velocidade mais confortável para leitura de frases completas
       u.onend = () => { if (onEnd) onEnd(); setTimeout(processSpeechQueue, 80); };
       u.onerror = () => { if (onEnd) onEnd(); setTimeout(processSpeechQueue, 80); };
       window.speechSynthesis.speak(u);
@@ -558,7 +556,7 @@
       const q = questions[state.idx]; if (!q) { showEnd(); return; }
       state.attempts = 0; state.locked = false; clearFeedback(); reveal.classList.remove('show');
       qCard.style.animation = 'none'; void qCard.offsetWidth; qCard.style.animation = 'cardIn 0.5s cubic-bezier(.34, 1.56, .64, 1)';
-      qImage.src = q.img; qImage.alt = 'objeto'; optionsEl.innerHTML = '';
+      qImage.src = q.img; optionsEl.innerHTML = '';
       shuffle(q.options).forEach(opt => {
         const btn = document.createElement('button'); btn.className = 'option'; btn.textContent = opt;
         btn.addEventListener('click', () => onOptionClick(opt, btn)); optionsEl.appendChild(btn);
@@ -568,7 +566,14 @@
 
     function playWord() { const q = questions[state.idx]; audioBtn.classList.add('playing'); speak(q.word, 'en', () => audioBtn.classList.remove('playing')); }
     audioBtn.addEventListener('click', playWord);
-    replayMini.addEventListener('click', () => { const q = questions[state.idx - 1] || questions[state.idx]; if (q) speak(q.word, 'en'); });
+    
+    replayMini.addEventListener('click', () => { 
+      const q = questions[state.idx - 1] || questions[state.idx]; 
+      if (q) {
+        // Fala a frase inteira de forma natural
+        speak(`${q.sentencePre} ${q.word} ${q.sentencePost}`, 'en');
+      } 
+    });
 
     /* ---------- ANSWER HANDLING ---------- */
     function onOptionClick(opt, btn) {
@@ -579,10 +584,20 @@
         optionsEl.querySelectorAll('.option').forEach(o => { o.classList.add('disabled'); if (o !== btn) o.classList.add('faded'); });
         if (state.attempts === 0) state.score += 1; else state.score += 0.5;
         setFeedback(t.feedbackGood, 'good');
-        revealWord.textContent = q.word; revealTr.textContent = q.tr[state.lang];
-        revealTr.className = 'word-pt ' + (state.lang === 'fa' ? 'dari-text' : '');
-        reveal.classList.remove('show'); setTimeout(() => reveal.classList.add('show'), 50);
-        setTimeout(() => { state.idx++; renderQuestion(); }, 5200);
+
+        // Renderiza a frase montada destacando a opção correta escolhida pelo aluno
+        revealSentence.innerHTML = `${q.sentencePre}<span class="completed-chunk">${q.word}</span>${q.sentencePost}`;
+        revealTranslation.textContent = q.tr[state.lang];
+        
+        reveal.classList.remove('show'); 
+        setTimeout(() => reveal.classList.add('show'), 50);
+
+        // Dispara a fala da frase inteira montada para reforço auditivo do aluno
+        setTimeout(() => {
+          speak(`${q.sentencePre} ${q.word} ${q.sentencePost}`, 'en');
+        }, 600);
+
+        setTimeout(() => { state.idx++; renderQuestion(); }, 6500); // 6.5 segundos para dar tempo de ler e escutar a frase inteira
       } else {
         state.attempts++; btn.classList.add('wrong', 'disabled'); state.lives = Math.max(0, state.lives - 1); updateLives();
         setFeedback(t.feedbackAlmost, 'bad'); speak(t.voiceAlmost, 'en');
