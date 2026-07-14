@@ -1040,8 +1040,17 @@
     restartBtn.addEventListener('click', restart);
 
     /* ---------- INIT ---------- */
-    setLanguage('pt'); // Inicializa em português por padrão
-    renderQuestion();
-  </script>
-</body>
-</html>
+    // Substitua a inicialização antiga por esta para ler o idioma vindo do index!
+    window.addEventListener('DOMContentLoaded', () => {
+      // Tenta pegar o idioma salvo pelo index.html, se não achar, usa 'pt' (Português)
+      const initialLang = localStorage.getItem('kitchen_words_lang') || 'pt';
+      setLanguage(initialLang);
+      renderQuestion();
+    });
+
+    // Atualiza o localStorage sempre que o aluno mudar o idioma de dentro do jogo também!
+    const originalSetLanguage = setLanguage;
+    setLanguage = function(lang) {
+      localStorage.setItem('kitchen_words_lang', lang);
+      originalSetLanguage(lang);
+    }
