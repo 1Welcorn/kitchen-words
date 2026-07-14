@@ -22,7 +22,9 @@
       --yellow-dk: #E8B848;
       --lilac:    #B8A1FF;
       --lilac-dk: #9A82E6;
-      --shadow:   0 6px 0 rgba(43, 37, 65, 0.15);
+      --green:    #06D6A0;
+      --green-dk: #04B084;
+      --shadow:   0 10px 0 rgba(43, 37, 65, 0.18);
     }
 
     * { box-sizing: border-box; }
@@ -43,120 +45,123 @@
       justify-content: center;
       padding: 20px;
       overflow-x: hidden;
-      transition: direction 0.3s ease;
     }
 
-    /* Decorativos Flutuantes */
     .deco {
       position: fixed;
       pointer-events: none;
       opacity: 0.45;
       z-index: 0;
     }
-    .deco-1 { top: 12%; left: 6%; font-size: 36px; animation: float 8s ease-in-out infinite; }
-    .deco-2 { top: 30%; right: 5%; font-size: 42px; animation: float 7s ease-in-out infinite -2s; }
-    .deco-3 { bottom: 12%; left: 9%; font-size: 38px; animation: float 9s ease-in-out infinite -4s; }
-    .deco-4 { bottom: 18%; right: 8%; font-size: 32px; animation: float 6.5s ease-in-out infinite -1s; }
+    .deco-1 { top: 12%; left: 6%; font-size: 42px; animation: float 8s ease-in-out infinite; }
+    .deco-2 { top: 25%; right: 6%; font-size: 48px; animation: float 7s ease-in-out infinite -2s; }
+    .deco-3 { bottom: 12%; left: 9%; font-size: 44px; animation: float 9s ease-in-out infinite -4s; }
+    .deco-4 { bottom: 18%; right: 8%; font-size: 38px; animation: float 6.5s ease-in-out infinite -1s; }
     @keyframes float {
       0%, 100% { transform: translateY(0) rotate(-5deg); }
       50%      { transform: translateY(-16px) rotate(5deg); }
     }
 
-    /* Container do Menu Principal */
+    /* Container do Menu Principal Repaginado */
     .menu-card {
       background: #fff;
-      border: 5px solid var(--ink);
-      border-radius: 36px;
-      padding: 40px 30px;
-      max-width: 480px;
+      border: 6px solid var(--ink);
+      border-radius: 48px;
+      padding: 50px 40px;
+      max-width: 520px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 10px 0 rgba(43, 37, 65, 0.18);
+      box-shadow: var(--shadow);
       position: relative;
       z-index: 2;
     }
 
+    .logo-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 24px;
+    }
     .logo-img {
-      width: 100px;
-      height: 100px;
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      margin-bottom: 20px;
+      width: 120px;
+      height: 120px;
+      border: 5px solid var(--ink);
+      border-radius: 32px;
+      box-shadow: 0 8px 0 rgba(43, 37, 65, 0.15);
+      background: #fff;
+      transform: rotate(-3deg);
+      transition: transform 0.3s ease;
+    }
+    .menu-card:hover .logo-img {
+      transform: rotate(3deg) scale(1.05);
     }
 
     h1 {
       font-weight: 700;
-      font-size: 36px;
+      font-size: 42px;
       margin: 0 0 8px;
       color: var(--ink);
       line-height: 1.1;
+      letter-spacing: -0.5px;
     }
 
     .subtitle {
       font-family: 'Caveat', cursive;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 700;
       color: var(--lilac-dk);
       margin: 0 0 24px;
     }
 
     p {
-      font-size: 18px;
+      font-size: 19px;
       color: var(--ink-soft);
-      line-height: 1.4;
-      margin: 0 0 30px;
+      line-height: 1.5;
+      margin: 0 0 35px;
+      font-weight: 500;
     }
 
-    /* Seletor de Idiomas Lindo e Compacto */
-    .lang-selector-container {
-      background: rgba(255, 255, 255, 0.9);
-      border: 3px solid var(--ink);
-      border-radius: 999px;
-      padding: 4px;
+    /* Botão Iniciar Premium (Estilo Cartoon Lúdico 3D) */
+    .btn-play {
       display: inline-flex;
-      gap: 6px;
-      box-shadow: var(--shadow);
-      margin-bottom: 30px;
-    }
-    .lang-btn {
-      background: none;
-      border: none;
-      font-size: 20px;
-      padding: 6px 12px;
-      cursor: pointer;
-      border-radius: 999px;
-      transition: transform 0.1s, background-color 0.2s;
-    }
-    .lang-btn:hover { transform: scale(1.1); }
-    .lang-btn.active {
-      background-color: var(--lilac);
-      box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
-    }
-
-    /* Botão Iniciar Grande */
-    .btn-big {
-      display: block;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
       width: 100%;
-      padding: 18px 24px;
-      background: var(--green);
+      padding: 22px 30px;
+      background: linear-gradient(135deg, #06D6A0 0%, #04B084 100%);
       color: #fff;
-      border: 4px solid var(--ink);
-      border-radius: 22px;
-      font-family: 'Fredoka';
+      border: 5px solid var(--ink);
+      border-radius: 28px;
+      font-family: 'Fredoka', sans-serif;
       font-weight: 700;
-      font-size: 22px;
+      font-size: 26px;
       cursor: pointer;
-      box-shadow: 0 6px 0 var(--ink);
-      transition: transform 0.08s, box-shadow 0.08s, background-color 0.2s;
+      box-shadow: 0 10px 0 var(--ink);
       text-decoration: none;
       text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      animation: pulseBtn 2s infinite ease-in-out;
     }
-    .btn-big:hover { transform: translateY(-2px); box-shadow: 0 8px 0 var(--ink); background-color: var(--green-dk); }
-    .btn-big:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ink); }
+    .btn-play:hover {
+      background: linear-gradient(135deg, #07e2aa 0%, #04be90 100%);
+    }
+    .btn-play:active {
+      transform: translateY(8px);
+      box-shadow: 0 2px 0 var(--ink);
+    }
+
+    @keyframes pulseBtn {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
 
     @media (max-width: 520px) {
-      .menu-card { padding: 30px 20px; border-radius: 28px; }
-      h1 { font-size: 28px; }
+      .menu-card { padding: 35px 20px; border-radius: 36px; }
+      h1 { font-size: 32px; }
+      .btn-play { font-size: 22px; padding: 18px 20px; }
       .deco { display: none; }
     }
   </style>
@@ -168,83 +173,19 @@
   <div class="deco deco-4">🍴</div>
 
   <main class="menu-card">
-    <img class="logo-img" src="favicon.png" alt="Logo">
+    <div class="logo-container">
+      <img class="logo-img" src="favicon.png" alt="Logo">
+    </div>
     
     <h1 id="homeTitle">Cozinha em Inglês</h1>
-    <div class="subtitle" id="homeSubtitle">Fase 2 — Teste final</div>
+    <div class="subtitle" id="homeSubtitle">Fase 2 — Verbos e Ações</div>
     
-    <p id="homeDesc">Aprenda brincando o vocabulário de cozinha em inglês e teste seus conhecimentos!</p>
+    <p id="homeDesc">Combine as imagens aos blocos de ação em inglês e veja as frases se completarem magicamente!</p>
 
-    <!-- Seletor de Idiomas no Centro do Menu -->
-    <div class="lang-selector-container">
-      <button class="lang-btn active" id="btnPt" onclick="changeHomeLanguage('pt')" title="Português">🇧🇷 PT</button>
-      <button class="lang-btn" id="btnEs" onclick="changeHomeLanguage('es')" title="Español">🇪🇸 ES</button>
-      <button class="lang-btn" id="btnFa" onclick="changeHomeLanguage('fa')" title="دری (Dari)">🇦🇫 دری</button>
-    </div>
-
-    <!-- Botão de Iniciar que direciona para o quiz.html -->
-    <a href="quiz.html" class="btn-big" id="btnStart">Iniciar Jogo 🚀</a>
+    <!-- Botão de Iniciar Estilizado -->
+    <a href="quiz.html" class="btn-play" id="btnStart">
+      <span>Jogar Agora</span> 🚀
+    </a>
   </main>
-
-  <script>
-    /* ---------- TRANSLATIONS ---------- */
-    const homeTranslations = {
-      pt: {
-        dir: 'ltr',
-        title: 'Cozinha em Inglês',
-        subtitle: 'Fase 2 — Teste final',
-        desc: 'Aprenda brincando o vocabulário de cozinha em inglês e teste seus conhecimentos!',
-        btnStart: 'Iniciar Jogo 🚀'
-      },
-      es: {
-        dir: 'ltr',
-        title: 'Cocina en Inglés',
-        subtitle: 'Fase 2 — Prueba final',
-        desc: '¡Aprende jugando el vocabulario de cocina en inglés y prueba tus conocimientos!',
-        btnStart: 'Iniciar Juego 🚀'
-      },
-      fa: {
-        dir: 'rtl',
-        title: 'آشپزخانه به انگلیسی',
-        subtitle: 'مرحله ۲ — آزمون نهایی',
-        desc: 'واژگان آشپزخانه را به زبان انگلیسی با بازی یاد بگیرید و دانش خود را آزمایش کنید!',
-        btnStart: 'شروع بازی 🚀'
-      }
-    };
-
-    /* ---------- DOM ELEMENTS ---------- */
-    const elTitle = document.getElementById('homeTitle');
-    const elSubtitle = document.getElementById('homeSubtitle');
-    const elDesc = document.getElementById('homeDesc');
-    const elBtnStart = document.getElementById('btnStart');
-
-    /* ---------- LANGUAGE LOGIC ---------- */
-    function changeHomeLanguage(lang) {
-      localStorage.setItem('kitchen_words_lang', lang);
-      
-      // Altera a classe ativa nos botões seletores
-      document.getElementById('btnPt').classList.toggle('active', lang === 'pt');
-      document.getElementById('btnEs').classList.toggle('active', lang === 'es');
-      document.getElementById('btnFa').classList.toggle('active', lang === 'fa');
-
-      const t = homeTranslations[lang];
-      
-      // Ajusta alinhamento e direção de escrita da página
-      document.body.setAttribute('dir', t.dir);
-      document.documentElement.setAttribute('lang', lang);
-
-      // Aplica as traduções
-      elTitle.textContent = t.title;
-      elSubtitle.textContent = t.subtitle;
-      elDesc.textContent = t.desc;
-      elBtnStart.textContent = t.btnStart;
-    }
-
-    // Inicializa a página lendo a memória ou em português
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedLang = localStorage.getItem('kitchen_words_lang') || 'pt';
-      changeHomeLanguage(savedLang);
-    });
-  </script>
 </body>
 </html>
