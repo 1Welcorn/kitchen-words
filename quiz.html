@@ -42,6 +42,7 @@
       min-height: 100vh;
       overflow-x: hidden;
       -webkit-tap-highlight-color: transparent;
+      transition: direction 0.3s ease;
     }
 
     /* Floating decorations */
@@ -63,7 +64,7 @@
     /* ============ TOP BAR ============ */
     .topbar {
       position: relative;
-      z-index: 2;
+      z-index: 10;
       max-width: 720px;
       margin: 0 auto;
       padding: 22px 24px 8px;
@@ -110,8 +111,32 @@
       margin-top: 2px;
     }
 
+    /* Compact Language Selector Container */
+    .lang-selector-container {
+      background: rgba(255, 255, 255, 0.9);
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 4px;
+      display: flex;
+      gap: 4px;
+      box-shadow: var(--shadow);
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      font-size: 18px;
+      padding: 4px 8px;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: transform 0.1s, background-color 0.2s;
+    }
+    .lang-btn:hover { transform: scale(1.1); }
+    .lang-btn.active {
+      background-color: var(--lilac);
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
+    }
+
     .lives {
-      margin-left: auto;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -182,7 +207,7 @@
       border: 5px solid var(--ink);
       border-radius: 36px;
       padding: 28px 26px 30px;
-      box-shadow: 0 10px 0 rgba(43,37,65,0.18);
+      box-shadow: 0 10px 0 rgba(43, 37, 65, 0.18);
       text-align: center;
       animation: cardIn 0.5s cubic-bezier(.34, 1.56, .64, 1);
     }
@@ -245,6 +270,10 @@
       box-shadow: 0 4px 0 var(--ink);
       transition: transform 0.08s, box-shadow 0.08s;
     }
+    body[dir="rtl"] .audio-btn {
+      right: auto;
+      left: 10px;
+    }
     .audio-btn:hover { transform: translateY(-1px); }
     .audio-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--ink); }
     .audio-btn.playing { animation: pulse 0.8s ease-in-out infinite; }
@@ -306,6 +335,10 @@
       font-size: 16px;
       font-weight: 700;
       opacity: 0.9;
+    }
+    body[dir="rtl"] .option.correct::after {
+      right: auto;
+      left: 10px;
     }
 
     .option.wrong {
@@ -388,10 +421,14 @@
       font-weight: 700;
     }
     .reveal .word-pt {
-      font-family: 'Caveat', cursive;
+      font-family: 'Fredoka', sans-serif;
       font-size: 30px;
       font-weight: 700;
       color: var(--ink);
+    }
+    .reveal .word-pt.dari-text {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--coral-dk);
     }
     .reveal .replay-mini {
       display: inline-block;
@@ -508,11 +545,6 @@
       color: var(--ink);
       margin-top: 12px;
     }
-    .btn-big.tertiary {
-      background: var(--lilac);
-      color: #fff;
-      margin-top: 12px;
-    }
 
     /* Confetti */
     .confetti {
@@ -545,14 +577,22 @@
   <div class="deco deco-4">🍴</div>
 
   <header class="topbar">
-    <a class="home-btn" href="index.html" title="Voltar">←</a>
+    <a class="home-btn" href="index.html" id="homeBtn" title="Voltar">←</a>
     <div class="logo">
       <img src="favicon.png" alt="">
       <div class="title-stack">
-        Cozinha em Inglês
-        <small>Fase 2 — Teste final</small>
+        <span id="logoTitle">Cozinha em Inglês</span>
+        <small id="logoSubtitle">Fase 2 — Teste final</small>
       </div>
     </div>
+    
+    <!-- Novo Seletor de Idiomas Compacto e Lindo -->
+    <div class="lang-selector-container">
+      <button class="lang-btn active" id="btnPt" onclick="setLanguage('pt')" title="Português">🇧🇷</button>
+      <button class="lang-btn" id="btnEs" onclick="setLanguage('es')" title="Español">🇪🇸</button>
+      <button class="lang-btn" id="btnFa" onclick="setLanguage('fa')" title="دری (Dari)">🇦🇫</button>
+    </div>
+
     <div class="lives" id="lives">
       <span class="heart">❤️</span>
       <span class="heart">❤️</span>
@@ -567,8 +607,8 @@
 
   <main class="stage">
     <section class="q-card" id="qCard">
-      <div class="q-prompt">Qual é o nome?</div>
-      <h1 class="q-title">Toque na palavra certa em inglês</h1>
+      <div class="q-prompt" id="qPrompt">Qual é o nome?</div>
+      <h1 class="q-title" id="qTitle">Toque na palavra certa em inglês</h1>
 
       <div class="img-frame">
         <img id="qImage" src="images/fridge.png" alt="">
@@ -594,20 +634,99 @@
       <h2 id="endTitle">Mandou bem!</h2>
       <div class="subtitle" id="endSubtitle">Você terminou a Fase 2!</div>
       <div class="stars-row" id="starsRow"></div>
-      <div class="score-line">Acertos: <b id="finalScore">0/5</b></div>
+      <div class="score-line"><span id="lblHits">Acertos</span>: <b id="finalScore">0/5</b></div>
       <button class="btn-big" id="restartBtn">Jogar de novo 🔁</button>
-      <a class="btn-big secondary" href="index.html">Voltar ao início</a>
+      <a class="btn-big secondary" href="index.html" id="backBtn">Voltar ao início</a>
     </div>
   </div>
 
   <script>
+    /* ---------- TRANSLATIONS ---------- */
+    const translations = {
+      pt: {
+        dir: 'ltr',
+        logoTitle: 'Cozinha em Inglês',
+        logoSubtitle: 'Fase 2 — Teste final',
+        qPrompt: 'Qual é o nome?',
+        qTitle: 'Toque na palavra certa em inglês',
+        feedbackGood: 'Muito bem! 🎉',
+        feedbackAlmost: 'Quase! Tente outra 💪',
+        audioReplay: '🔊 Ouvir de novo',
+        endGood: 'Incrível! 🎉',
+        endGoodSub: 'Você é fera no inglês!',
+        endMedium: 'Muito bem!',
+        endMediumSub: 'Você está aprendendo rápido!',
+        endBad: 'Bom trabalho!',
+        endBadSub: 'Vamos treinar mais um pouco?',
+        endFail: 'Boa tentativa!',
+        endFailSub: 'Quase lá — bora de novo?',
+        restartBtn: 'Jogar de novo 🔁',
+        backBtn: 'Voltar ao início',
+        lblHits: 'Acertos',
+        lblDone: 'Concluído!',
+        lblQuestion: 'Pergunta',
+        voiceGood: 'Great job!',
+        voiceAlmost: 'Try again'
+      },
+      es: {
+        dir: 'ltr',
+        logoTitle: 'Cocina en Inglés',
+        logoSubtitle: 'Fase 2 — Prueba final',
+        qPrompt: '¿Cuál es el nombre?',
+        qTitle: 'Toca la palabra correcta en inglés',
+        feedbackGood: '¡Muy bien! 🎉',
+        feedbackAlmost: '¡Casi! Intenta otra 💪',
+        audioReplay: '🔊 Escuchar de nuevo',
+        endGood: '¡Increíble! 🎉',
+        endGoodSub: '¡Eres genial en inglés!',
+        endMedium: '¡Muy bien!',
+        endMediumSub: '¡Estás aprendiendo rápido!',
+        endBad: '¡Buen trabajo!',
+        endBadSub: '¿Practicamos un poco más?',
+        endFail: '¡Buen intento!',
+        endFailSub: 'Casi allí — ¿otra vez?',
+        restartBtn: 'Jugar de nuevo 🔁',
+        backBtn: 'Volver al inicio',
+        lblHits: 'Aciertos',
+        lblDone: '¡Completado!',
+        lblQuestion: 'Pregunta',
+        voiceGood: 'Great job!',
+        voiceAlmost: 'Try again'
+      },
+      fa: {
+        dir: 'rtl',
+        logoTitle: 'آشپزخانه به انگلیسی',
+        logoSubtitle: 'مرحله ۲ — آزمون نهایی',
+        qPrompt: 'نام این چیست؟',
+        qTitle: 'روی کلمه انگلیسی صحیح ضربه بزنید',
+        feedbackGood: 'بسیار عالی! 🎉',
+        feedbackAlmost: 'تقریباً درست بود! یکی دیگر را امتحان کنید 💪',
+        audioReplay: '🔊 گوش دادن دوباره',
+        endGood: 'عالی بود! 🎉',
+        endGoodSub: 'شما در انگلیسی فوق‌العاده هستید!',
+        endMedium: 'بسیار خوب!',
+        endMediumSub: 'شما به سرعت در حال یادگیری هستید!',
+        endBad: 'کار خوبی بود!',
+        endBadSub: 'بیایید کمی بیشتر تمرین کنیم؟',
+        endFail: 'تلاش خوبی بود!',
+        endFailSub: 'تقریبا رسیدید — دوباره امتحان کنید؟',
+        restartBtn: 'دوباره بازی کنید 🔁',
+        backBtn: 'بازگشت به خانه',
+        lblHits: 'پاسخ‌های صحیح',
+        lblDone: 'کامل شد!',
+        lblQuestion: 'سوال',
+        voiceGood: 'Great job!',
+        voiceAlmost: 'Try again'
+      }
+    };
+
     /* ---------- DATA ---------- */
     const questions = [
-      { word: 'FRIDGE', img: 'images/fridge.png', tr: 'geladeira', options: ['FRIDGE', 'STOVE', 'OVEN', 'TABLE'] },
-      { word: 'SPOON',  img: 'images/spoon.png',  tr: 'colher',    options: ['FORK', 'SPOON', 'KNIFE', 'PLATE'] },
-      { word: 'KNIFE',  img: 'images/knife.png',  tr: 'faca',      options: ['CUP', 'PAN', 'KNIFE', 'SPOON'] },
-      { word: 'PAN',    img: 'images/pan.png',    tr: 'panela',    options: ['OVEN', 'FRIDGE', 'PAN', 'BOWL'] },
-      { word: 'CUP',    img: 'images/cup.png',    tr: 'copo',      options: ['CUP', 'FORK', 'KNIFE', 'PAN'] }
+      { word: 'FRIDGE', img: 'images/fridge.png', tr: { pt: 'geladeira', es: 'refrigerador', fa: 'یخچال' }, options: ['FRIDGE', 'STOVE', 'OVEN', 'TABLE'] },
+      { word: 'SPOON',  img: 'images/spoon.png',  tr: { pt: 'colher', es: 'cuchara', fa: 'قاشق' },    options: ['FORK', 'SPOON', 'KNIFE', 'PLATE'] },
+      { word: 'KNIFE',  img: 'images/knife.png',  tr: { pt: 'faca', es: 'cuchillo', fa: 'چاقو' },      options: ['CUP', 'PAN', 'KNIFE', 'SPOON'] },
+      { word: 'PAN',    img: 'images/pan.png',    tr: { pt: 'panela', es: 'olla', fa: 'دیگ' },       options: ['OVEN', 'FRIDGE', 'PAN', 'BOWL'] },
+      { word: 'CUP',    img: 'images/cup.png',    tr: { pt: 'copo', es: 'vaso', fa: 'گیلاس (لیوان)' },      options: ['CUP', 'FORK', 'KNIFE', 'PAN'] }
     ];
 
     /* ---------- STATE ---------- */
@@ -616,7 +735,8 @@
       score: 0,
       lives: 3,
       locked: false,
-      attempts: 0  // attempts on current question (for half-credit on retry, etc.)
+      attempts: 0,
+      lang: 'pt' // Idioma original de seu país
     };
 
     /* ---------- DOM ---------- */
@@ -638,6 +758,51 @@
     const revealWord    = document.getElementById('revealWord');
     const revealTr      = document.getElementById('revealTr');
     const replayMini    = document.getElementById('replayMini');
+
+    // UI Translation elements
+    const elLogoTitle    = document.getElementById('logoTitle');
+    const elLogoSubtitle = document.getElementById('logoSubtitle');
+    const elQPrompt      = document.getElementById('qPrompt');
+    const elQTitle       = document.getElementById('qTitle');
+    const elRestartBtn   = document.getElementById('restartBtn');
+    const elBackBtn      = document.getElementById('backBtn');
+    const elLblHits      = document.getElementById('lblHits');
+
+    /* ---------- LANGUAGE SYSTEM ---------- */
+    function setLanguage(lang) {
+      state.lang = lang;
+      
+      // Toggle active states in selector buttons
+      document.getElementById('btnPt').classList.toggle('active', lang === 'pt');
+      document.getElementById('btnEs').classList.toggle('active', lang === 'es');
+      document.getElementById('btnFa').classList.toggle('active', lang === 'fa');
+
+      const t = translations[lang];
+      
+      // Update HTML attributes for alignment and language direction (RTL support)
+      document.body.setAttribute('dir', t.dir);
+      document.documentElement.setAttribute('lang', lang);
+
+      // Translate core UI elements
+      elLogoTitle.textContent = t.logoTitle;
+      elLogoSubtitle.textContent = t.logoSubtitle;
+      elQPrompt.textContent = t.qPrompt;
+      elQTitle.textContent = t.qTitle;
+      elRestartBtn.textContent = t.restartBtn;
+      elBackBtn.textContent = t.backBtn;
+      elLblHits.textContent = t.lblHits;
+      replayMini.textContent = t.audioReplay;
+
+      // Update current dynamic elements
+      updateProgress();
+      if (reveal.classList.contains('show')) {
+        const q = questions[state.idx - 1] || questions[state.idx];
+        if (q) {
+          revealTr.textContent = q.tr[state.lang];
+          revealTr.className = 'word-pt ' + (state.lang === 'fa' ? 'dari-text' : '');
+        }
+      }
+    }
 
     /* ---------- AUDIO ---------- */
     const speechQueue = [];
@@ -695,11 +860,12 @@
     }
 
     function updateProgress() {
+      const t = translations[state.lang];
       const pct = ((state.idx) / questions.length) * 100;
       progressFill.style.width = pct + '%';
       progressLabel.textContent = state.idx >= questions.length
-        ? 'Concluído!'
-        : `Pergunta ${state.idx + 1}/${questions.length}`;
+        ? t.lblDone
+        : `${t.lblQuestion} ${state.idx + 1}/${questions.length}`;
     }
 
     function updateLives() {
@@ -734,7 +900,6 @@
         optionsEl.appendChild(btn);
       });
 
-      // The 🔊 button on the image is opt-in support only — no autoplay.
       updateProgress();
     }
 
@@ -745,7 +910,7 @@
     }
     audioBtn.addEventListener('click', playWord);
     replayMini.addEventListener('click', () => {
-      const q = questions[state.idx];
+      const q = questions[state.idx - 1] || questions[state.idx];
       if (q) speak(q.word, 'en');
     });
 
@@ -753,30 +918,29 @@
     function onOptionClick(opt, btn) {
       if (state.locked) return;
       const q = questions[state.idx];
+      const t = translations[state.lang];
 
-      // Speak whatever they tapped (so they hear the word either way)
       speak(opt, 'en');
 
       if (opt === q.word) {
-        // Correct
         state.locked = true;
         btn.classList.add('correct');
-        // Fade the rest
         optionsEl.querySelectorAll('.option').forEach(o => {
           o.classList.add('disabled');
           if (o !== btn) o.classList.add('faded');
         });
-        // Score: full point on first try, half if they had wrong attempts
         if (state.attempts === 0) state.score += 1;
         else state.score += 0.5;
 
-        setFeedback('Muito bem! 🎉', 'good');
+        setFeedback(t.feedbackGood, 'good');
 
-        // Reveal the word in big after the kid gets it right
         revealWord.textContent = q.word;
-        revealTr.textContent = q.tr;
+        
+        // Exibe o idioma traduzido de acordo com o selecionado
+        revealTr.textContent = q.tr[state.lang];
+        revealTr.className = 'word-pt ' + (state.lang === 'fa' ? 'dari-text' : '');
+        
         reveal.classList.remove('show');
-        // tiny delay so the animation re-triggers cleanly
         setTimeout(() => reveal.classList.add('show'), 50);
 
         setTimeout(() => {
@@ -784,16 +948,14 @@
           renderQuestion();
         }, 5200);
       } else {
-        // Wrong
         state.attempts++;
         btn.classList.add('wrong', 'disabled');
         state.lives = Math.max(0, state.lives - 1);
         updateLives();
-        setFeedback('Quase! Tente outra 💪', 'bad', 'Try again!');
-        speak('Try again', 'en');
+        setFeedback(t.feedbackAlmost, 'bad');
+        speak(t.voiceAlmost, 'en');
 
         if (state.lives === 0) {
-          // Game over — but still show end screen kindly
           state.locked = true;
           setTimeout(showEnd, 1100);
         }
@@ -804,12 +966,12 @@
     function showEnd() {
       const total = questions.length;
       const score = state.score;
-      // Map score to 1–3 stars
+      const t = translations[state.lang];
+      
       let stars = 1;
       if (score >= total * 0.6) stars = 2;
       if (score >= total * 0.9) stars = 3;
 
-      // Build star row (3 max, plus empty placeholders)
       starsRow.innerHTML = '';
       for (let i = 0; i < 3; i++) {
         const s = document.createElement('span');
@@ -821,26 +983,26 @@
       finalScore.textContent = `${score % 1 === 0 ? score : score.toFixed(1)}/${total}`;
 
       if (state.lives === 0 && score < total) {
-        endTitle.textContent = 'Boa tentativa!';
-        endSubtitle.textContent = 'Quase lá — bora de novo?';
+        endTitle.textContent = t.endFail;
+        endSubtitle.textContent = t.endFailSub;
       } else if (stars === 3) {
-        endTitle.textContent = 'Incrível! 🎉';
-        endSubtitle.textContent = 'Você é fera no inglês!';
+        endTitle.textContent = t.endGood;
+        endSubtitle.textContent = t.endGoodSub;
         launchConfetti();
-        speak('Amazing! You did it!', 'en');
+        speak(t.voiceGood, 'en');
       } else if (stars === 2) {
-        endTitle.textContent = 'Muito bem!';
-        endSubtitle.textContent = 'Você está aprendendo rápido!';
+        endTitle.textContent = t.endMedium;
+        endSubtitle.textContent = t.endMediumSub;
         launchConfetti();
-        speak('Great job!', 'en');
+        speak(t.voiceGood, 'en');
       } else {
-        endTitle.textContent = 'Bom trabalho!';
-        endSubtitle.textContent = 'Vamos treinar mais um pouco?';
+        endTitle.textContent = t.endBad;
+        endSubtitle.textContent = t.endBadSub;
       }
 
       endOverlay.classList.add('show');
       progressFill.style.width = '100%';
-      progressLabel.textContent = 'Concluído!';
+      progressLabel.textContent = t.lblDone;
     }
 
     function launchConfetti() {
@@ -878,6 +1040,7 @@
     restartBtn.addEventListener('click', restart);
 
     /* ---------- INIT ---------- */
+    setLanguage('pt'); // Inicializa em português por padrão
     renderQuestion();
   </script>
 </body>
