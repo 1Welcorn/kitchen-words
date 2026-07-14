@@ -772,6 +772,9 @@
     function setLanguage(lang) {
       state.lang = lang;
       
+      // Salva a preferência no navegador compartilhado com o index.html
+      localStorage.setItem('kitchen_words_lang', lang);
+      
       // Toggle active states in selector buttons
       document.getElementById('btnPt').classList.toggle('active', lang === 'pt');
       document.getElementById('btnEs').classList.toggle('active', lang === 'es');
@@ -1040,17 +1043,12 @@
     restartBtn.addEventListener('click', restart);
 
     /* ---------- INIT ---------- */
-    // Substitua a inicialização antiga por esta para ler o idioma vindo do index!
     window.addEventListener('DOMContentLoaded', () => {
-      // Tenta pegar o idioma salvo pelo index.html, se não achar, usa 'pt' (Português)
+      // Carrega o idioma selecionado do index, ou usa 'pt' como padrão.
       const initialLang = localStorage.getItem('kitchen_words_lang') || 'pt';
       setLanguage(initialLang);
       renderQuestion();
     });
-
-    // Atualiza o localStorage sempre que o aluno mudar o idioma de dentro do jogo também!
-    const originalSetLanguage = setLanguage;
-    setLanguage = function(lang) {
-      localStorage.setItem('kitchen_words_lang', lang);
-      originalSetLanguage(lang);
-    }
+  </script>
+</body>
+</html>
